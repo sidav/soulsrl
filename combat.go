@@ -42,6 +42,15 @@ func (b *battlefield) applyEvents() {
 	}
 }
 
+func (b *battlefield) getActionPresentAt(x, y int) *action {
+	for _, a := range b.events {
+		if a.x == x && a.y == y {
+			return a
+		}
+	}
+	return nil
+}
+
 func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + ap.ticksToPerform
 	patternCoords := ap.getScaledRelativeCoordsByVector(vectorX, vectorY, u.size)

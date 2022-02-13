@@ -37,7 +37,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	}
 	c.resetStyle()
 	for _, e := range b.units {
-		c.renderMobAtCoords(e, e.x+bf_x_offset, e.y+bf_y_offset)
+		c.renderMobAtCoords(b, e, e.x+bf_x_offset, e.y+bf_y_offset)
 	}
 	c.resetStyle()
 	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+bf_x_offset+1, 1)
@@ -47,7 +47,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Show()
 }
 //
-func (c *consoleIO) renderMobAtCoords(e *mob, x, y int) {
+func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	var view []string
 	switch e.size {
 	case 0, 1:
@@ -64,8 +64,14 @@ func (c *consoleIO) renderMobAtCoords(e *mob, x, y int) {
 			"/ \\",
 		}
 	}
+	c.resetStyle()
 	for i := 0; i < e.size; i++ {
 		for j := 0; j < e.size; j++ {
+			if b.getActionPresentAt(x+i, y+j) != nil {
+				c.setStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+			} else {
+				c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
+			}
 			c.putUncoloredString(string(view[j][i]), x+i, y+j)
 		}
 	}

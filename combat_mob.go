@@ -19,7 +19,7 @@ func newMob(x, y int) *mob {
 	u := &mob{
 		x:    x,
 		y:    y,
-		size: 3,
+		size: 1,
 		dirX: 1,
 		dirY: 0,
 	}

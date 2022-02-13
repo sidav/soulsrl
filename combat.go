@@ -10,7 +10,7 @@ const (
 type battlefield struct {
 	tiles       [][]int
 	units       []*mob
-	events      []*event
+	events      []*action
 	currentTick int
 }
 
@@ -46,7 +46,7 @@ func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vec
 	tickToOccur := b.currentTick + ap.ticksToPerform
 	patternCoords := ap.getScaledRelativeCoordsByVector(vectorX, vectorY, u.size)
 	for _, coord := range patternCoords {
-		b.events = append(b.events, &event{
+		b.events = append(b.events, &action{
 			tickToOccur: tickToOccur,
 			owner:       u,
 			x:           u.x + coord[0],

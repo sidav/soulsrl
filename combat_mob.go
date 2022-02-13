@@ -24,7 +24,7 @@ func newMob(x, y int) *mob {
 		dirY: 0,
 	}
 
-	u.ap = patternsTable[0]
+	u.ap = patternsTable[APATTERN_SLASH]
 
 	return u
 }

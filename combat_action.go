@@ -1,6 +1,6 @@
 package main
 
-type event struct {
+type action struct {
 	x, y        int
 	tickToOccur int
 	owner       *mob

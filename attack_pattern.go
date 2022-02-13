@@ -26,12 +26,24 @@ func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]i
 	return coords
 }
 
-var patternsTable = []*attackPattern{
-	{
+const (
+	APATTERN_SLASH = iota
+	APATTERN_LUNGE
+)
+
+var patternsTable = map[int]*attackPattern {
+	APATTERN_SLASH: {
 		relativeCoords: [][]int{
 			{1, -1},
 			{1, 0},
 			{1, 1},
+		},
+		ticksToPerform: 10,
+	},
+	APATTERN_LUNGE: {
+		relativeCoords: [][]int{
+			{1, 0},
+			{2, 0},
 		},
 		ticksToPerform: 10,
 	},

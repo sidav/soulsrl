@@ -51,3 +51,15 @@ func scaleCoords(x, y, scale int) [][]int {
 	}
 	return scaled
 }
+
+func getSquareByVectorFromSquareOfSameSize(vx, vy, topleftx, toplefty, size int) [][]int {
+	var rectCoords [][]int
+	newtopleftx := topleftx + vx*size
+	newtoplefty := toplefty + vy*size
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
+			rectCoords = append(rectCoords, []int{newtopleftx+x, newtoplefty+y})
+		}
+	}
+	return rectCoords
+}

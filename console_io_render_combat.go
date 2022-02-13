@@ -37,8 +37,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	}
 	c.resetStyle()
 	for _, e := range b.units {
-		c.putChar('@', e.x+bf_x_offset, e.y+bf_y_offset)
-		c.putChar('X', e.x+e.dirX+bf_x_offset, e.y+e.dirY+bf_y_offset)
+		c.renderMobAtCoords(e, e.x+bf_x_offset, e.y+bf_y_offset)
 	}
 	c.resetStyle()
 	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+bf_x_offset+1, 1)
@@ -48,21 +47,33 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Show()
 }
 //
-//func (c *consoleIO) renderEnemyAtCoords(e *enemy, tick, x, y int) {
-//	strForHeads := c.getCharForEnemy(e.heads)
-//	colorTags := e.element.GetColorTags()
-//	switch len(colorTags) {
-//	case 0:
-//		c.resetStyle()
-//	case 1:
-//		c.setFgColorByColorTag(colorTags[0])
-//	default:
-//		// magic number 3 is just randomly chosen small prime. 5 or 7 or 11 would also work.
-//		c.setFgColorByColorTag(colorTags[tick/3%len(colorTags)])
-//	}
-//	c.putChar(strForHeads, x, y)
-//}
-//
+func (c *consoleIO) renderMobAtCoords(e *mob, x, y int) {
+	var view []string
+	switch e.size {
+	case 0, 1:
+		view = []string{"@"}
+	case 2:
+		view = []string{
+			"@@",
+			"@@",
+		}
+	case 3:
+		view = []string{
+			" o ",
+			"/|0",
+			"/ \\",
+		}
+	}
+	for i := 0; i < e.size; i++ {
+		for j := 0; j < e.size; j++ {
+			c.putUncoloredString(string(view[j][i]), x+i, y+j)
+		}
+	}
+	// render dir, safe to remove
+	cx, cy := e.getCentralCoord()
+	c.putChar('X', cx+e.dirX+bf_x_offset, cy+e.dirY+bf_y_offset)
+}
+
 //func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
 //	var lines = []string{
 //		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),

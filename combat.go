@@ -44,18 +44,13 @@ func (b *battlefield) applyEvents() {
 
 func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + ap.ticksToPerform
-	ucx, ucy := u.getCentralCoord()
-	for _, coord := range ap.relativeCoords {
-		rotatedX, rotatedY := getVectorRotatedLikeVector(coord[0], coord[1], vectorX, vectorY)
-		rotatedX += vectorX*u.size/2
-		rotatedY += vectorY*u.size/2
-		for _, scaledCoord := range scaleCoords(rotatedX, rotatedY, u.size) {
-			b.events = append(b.events, &event{
-				tickToOccur: tickToOccur,
-				owner:       u,
-				x:           ucx + scaledCoord[0],
-				y:           ucy + scaledCoord[1],
-			})
-		}
+	patternCoords := ap.getScaledRelativeCoordsByVector(vectorX, vectorY, u.size)
+	for _, coord := range patternCoords {
+		b.events = append(b.events, &event{
+			tickToOccur: tickToOccur,
+			owner:       u,
+			x:           u.x + coord[0],
+			y:           u.y + coord[1],
+		})
 	}
 }

@@ -14,7 +14,7 @@ func (ap *attackPattern) getRelativeCoordsByVector(vx, vy int) [][]int {
 	return coords
 }
 
-func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]int{
+func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
 	rotatedCoords := ap.getRelativeCoordsByVector(vx, vy)
 	var coords [][]int
 	for _, coord := range rotatedCoords {
@@ -26,6 +26,13 @@ func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]i
 	return coords
 }
 
-//  o
-// /|0
-// / \
+var patternsTable = []*attackPattern{
+	{
+		relativeCoords: [][]int{
+			{1, -1},
+			{1, 0},
+			{1, 1},
+		},
+		ticksToPerform: 10,
+	},
+}

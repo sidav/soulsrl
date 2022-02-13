@@ -24,14 +24,7 @@ func newMob(x, y int) *mob {
 		dirY: 0,
 	}
 
-	u.ap = &attackPattern{relativeCoords:
-	[][]int{
-		{1, -1},
-		{1, 0},
-		{1, 1},
-	},
-		ticksToPerform: 10,
-	}
+	u.ap = patternsTable[0]
 
 	return u
 }

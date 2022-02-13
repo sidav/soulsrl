@@ -10,7 +10,7 @@ func (b *battlefield) combatGameLoop() {
 		if e.nextTickToAct > b.currentTick {
 			continue
 		}
-		e.dirX, e.dirY = rotateIntVector(e.dirX, e.dirY, 45)
+		e.dirX, e.dirY = stupidRotateVector45(e.dirX, e.dirY)
 		e.nextTickToAct = b.currentTick + e.ap.ticksToPerform + 5
 		b.applyAttackPattern(e, e.ap, e.dirX, e.dirY)
 	}

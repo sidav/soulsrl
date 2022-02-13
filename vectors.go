@@ -1,28 +1,35 @@
 package main
 
-import "math"
-
 func getVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
 	// rotates vx, vy relative to (1, 0) until this (1, 0) is (rx, ry)
-	//x, y := 1, 0
-	//for x != rx || y != ry {
-	//	x, y = rotateIntVector(x, y, 45)
-	//	vx, vy = rotateIntVector(vx, vy, 45)
-	//}
-	atan := math.Atan2(float64(ry), float64(rx))
-	return rotateIntVector(vx, vy, int(atan*180/3.14159265))
+	x, y := 1, 0
+	for x != rx || y != ry {
+		x, y = stupidRotateVector45(x, y)
+		vx, vy = stupidRotateVector45(vx, vy)
+	}
+	return vx, vy
+	//atan := math.Atan2(float64(ry), float64(rx))
+	//return rotateIntVector(vx, vy, int(atan*180/3.14159265))
 }
 
-func rotateIntVector(x, y, angle int) (int, int) {
+//func rotateIntVector(x, y, angle int) (int, int) {
+//	rads := float64(angle) * 3.14159265358979323 / 180
+//	sin := math.Sin(rads)
+//	cos := math.Cos(rads)
+//	fx := float64(x)*cos - float64(y)*sin
+//	fy := float64(x)*sin + float64(y)*cos
+//	x = int(math.Round(fx))
+//	y = int(math.Round(fy))
+//	return x, y
+//}
+
+// doesn't work well when x != 0, y != 0 and coords are not diagonal
+func stupidRotateVector45(x, y int) (int, int) {
+	initialLen := max(abs(x), abs(y))
 	t := x
-	rads := float64(angle) * 3.14159265358979323 / 180
-	sin := math.Sin(rads)
-	cos := math.Cos(rads)
-	fx := float64(x)*cos - float64(y)*sin
-	fy := float64(t)*sin + float64(y)*cos
-	x = int(math.Round(fx))
-	y = int(math.Round(fy))
-	return x, y
+	x = x - y
+	y = t + y
+	return sign(x)*initialLen, sign(y)*initialLen
 }
 
 func abs(x int) int {
@@ -30,6 +37,13 @@ func abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func max(i, j int) int {
+	if i > j {
+		return i
+	}
+	return j
 }
 
 func sign(x int) int {

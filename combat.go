@@ -23,11 +23,11 @@ func newBattlefield() *battlefield {
 		b.tiles[i] = make([]int, bfH)
 	}
 
-	for i := 0; i < 5*bfW*bfH/100; i++ {
-		x, y := rnd.RandInRange(1, bfW-2), rnd.RandInRange(1, bfH-2)
-		b.tiles[x][y] = TILE_WALL
-	}
-	b.units = append(b.units, newMob(bfW/2, 2))
+	//for i := 0; i < 5*bfW*bfH/100; i++ {
+	//	x, y := rnd.RandInRange(1, bfW-2), rnd.RandInRange(1, bfH-2)
+	//	b.tiles[x][y] = TILE_WALL
+	//}
+	b.units = append(b.units, newMob(bfW/2, bfH/2))
 	return b
 }
 
@@ -44,13 +44,18 @@ func (b *battlefield) applyEvents() {
 
 func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + ap.ticksToPerform
+	ucx, ucy := u.getCentralCoord()
 	for _, coord := range ap.relativeCoords {
 		rotatedX, rotatedY := getVectorRotatedLikeVector(coord[0], coord[1], vectorX, vectorY)
-		b.events = append(b.events, &event{
-			tickToOccur: tickToOccur,
-			owner:       u,
-			x: u.x + rotatedX,
-			y: u.y + rotatedY,
-		})
+		rotatedX += vectorX*u.size/2
+		rotatedY += vectorY*u.size/2
+		for _, scaledCoord := range scaleCoords(rotatedX, rotatedY, u.size) {
+			b.events = append(b.events, &event{
+				tickToOccur: tickToOccur,
+				owner:       u,
+				x:           ucx + scaledCoord[0],
+				y:           ucy + scaledCoord[1],
+			})
+		}
 	}
 }

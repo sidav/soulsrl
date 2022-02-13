@@ -41,3 +41,13 @@ func sign(x int) int {
 	}
 	return 1
 }
+
+func scaleCoords(x, y, scale int) [][]int {
+	var scaled [][]int
+	for nx := 0; nx < scale; nx++ {
+		for ny := 0; ny < scale; ny++ {
+			scaled = append(scaled, []int{x + nx, y + ny})
+		}
+	}
+	return scaled
+}

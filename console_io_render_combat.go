@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/gdamore/tcell/v2"
+	"github.com/gdamore/tcell"
 )
 
 const (
@@ -35,6 +35,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
 		c.putChar(' ', e.x+bf_x_offset, e.y+bf_y_offset)
 	}
+	c.resetStyle()
 	for _, e := range b.units {
 		c.putChar('@', e.x+bf_x_offset, e.y+bf_y_offset)
 		c.putChar('X', e.x+e.dirX+bf_x_offset, e.y+e.dirY+bf_y_offset)

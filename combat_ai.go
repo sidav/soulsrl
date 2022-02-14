@@ -5,9 +5,13 @@ import "soulsrl/line"
 func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.dirX, m.y+m.dirY
 	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.OneChanceFrom(10) {
-		m.dirX, m.dirY = rnd.RandomUnitVectorInt(true)
-		m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
-		return
+		coordsList := b.getListOfVectorsToPassableCoordsForMob(m)
+		if len(coordsList) > 0 {
+			selected := coordsList[rnd.Rand(len(coordsList))]
+			m.dirX, m.dirY = selected[0], selected[1]
+			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
+			return
+		}
 	}
 
 	if rnd.OneChanceFrom(5) && b.tryAttackAsMob(m) {
@@ -15,13 +19,12 @@ func (b *battlefield) actAsMob(m *mob) {
 	} else {
 		// move by coords
 		mobAtCoords := b.getMobInSquareOtherThan(m.x+m.dirX, m.y+m.dirY, m.size, m)
-		if b.isRectFullyPassable(m.x+m.dirX, m.y+m.dirY, m.size) && mobAtCoords == nil {
+		if b.areAllTilesInRectPassable(m.x+m.dirX, m.y+m.dirY, m.size) && mobAtCoords == nil {
 			m.x += m.dirX
 			m.y += m.dirY
 			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
 		} else {
-			m.dirX, m.dirY = rnd.RandomUnitVectorInt(true)
-			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
+			m.dirX, m.dirY = 0, 0 // so it will be changed later
 			return
 		}
 	}

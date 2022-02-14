@@ -45,7 +45,7 @@ func (b *battlefield) containsCoords(x, y int) bool {
 	return rectContainsCoords(0, 0, len(b.tiles), len(b.tiles[0]), x, y)
 }
 
-func (b *battlefield) isRectFullyPassable(x, y, w int) bool {
+func (b *battlefield) areAllTilesInRectPassable(x, y, w int) bool {
 	for i := 0; i < w; i++ {
 		for j := 0; j < w; j++ {
 			cx, cy := x+i, y+j
@@ -101,4 +101,19 @@ func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vec
 			y:           u.y + coord[1],
 		})
 	}
+}
+
+func (b *battlefield) getListOfVectorsToPassableCoordsForMob(m *mob) [][]int {
+	var coords [][]int
+	for x := -1; x <= 1; x++ {
+		for y := -1; y <= 1; y++ {
+			if x == 0 && y == 0 {
+				continue
+			}
+			if b.areAllTilesInRectPassable(m.x+x, m.y+y, m.size) {
+				coords = append(coords, []int{x, y})
+			}
+		}
+	}
+	return coords
 }

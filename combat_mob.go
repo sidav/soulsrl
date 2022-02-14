@@ -16,7 +16,7 @@ func (m *mob) getCentralCoord() (int, int) {
 }
 
 func (m *mob) containsCoords(x, y int) bool {
-	return m.x <= x && x < m.x+m.size && m.y <= y && y < m.y+m.size
+	return squareContainsCoords(m.x, m.y, m.size, x, y)
 }
 
 // rewrite, too hardcoded

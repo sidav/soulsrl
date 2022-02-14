@@ -56,6 +56,14 @@ func sign(x int) int {
 	return 1
 }
 
+func squareContainsCoords(sx, sy, w, x, y int) bool {
+	return rectContainsCoords(sx, sy, w, w, x, y)
+}
+
+func rectContainsCoords(rx, ry, w, h, x, y int) bool {
+	return rx <= x && x < rx+w && ry <= y && y < ry+h
+}
+
 func doTwoSquaresOverlap(x1, y1, w1, x2, y2, w2 int) bool {
 	// reduce width, because of 1-width squares
 	w1--

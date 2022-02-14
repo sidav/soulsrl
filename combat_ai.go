@@ -1,7 +1,8 @@
 package main
 
 func (b *battlefield) actAsMob(m *mob) {
-	if m.dirX == 0 && m.dirY == 0 || rnd.OneChanceFrom(10) {
+	newx, newy := m.x+m.dirX, m.y+m.dirY
+	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.OneChanceFrom(10) {
 		m.dirX, m.dirY = rnd.RandomUnitVectorInt(true)
 		m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
 		return

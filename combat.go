@@ -16,26 +16,38 @@ type battlefield struct {
 
 func newBattlefield() *battlefield {
 	b := &battlefield{}
-	bfW := 11 //  rnd.RandInRange(7, 10)
-	bfH := 9  // rnd.RandInRange(7, 10)
+	bfW := 25 //  rnd.RandInRange(7, 10)
+	bfH := 15  // rnd.RandInRange(7, 10)
 	b.tiles = make([][]int, bfW)
 	for i := range b.tiles {
 		b.tiles[i] = make([]int, bfH)
 	}
 
-	//for i := 0; i < 5*bfW*bfH/100; i++ {
-	//	x, y := rnd.RandInRange(1, bfW-2), rnd.RandInRange(1, bfH-2)
-	//	b.tiles[x][y] = TILE_WALL
-	//}
-	b.mobs = append(b.mobs, newMob(bfW/2, bfH/2))
+	b.mobs = append(b.mobs, newMob(0, 0))
+	b.mobs = append(b.mobs, newMob(bfW-1, bfH-1))
+	b.mobs[0].size = 3
+
+	totalWalls := bfW*bfH * 10/100
+	for i := 0; i < totalWalls; {
+		x, y := rnd.RandInRange(0, bfW-1), rnd.RandInRange(0, bfH-1)
+		if b.getMobPresentAt(x, y) == nil {
+			b.tiles[x][y] = TILE_WALL
+			i++
+		}
+	}
+
 	return b
+}
+
+func (b *battlefield) containsCoords(x, y int) bool {
+	return rectContainsCoords(0, 0, len(b.tiles), len(b.tiles[0]), x, y)
 }
 
 func (b *battlefield) isRectFullyPassable(x, y, w int) bool {
 	for i := 0; i < w; i++ {
 		for j := 0; j < w; j++ {
 			cx, cy := x+i, y+j
-			if cx < 0 || cx >= len(b.tiles) || cy < 0 || cy >= len(b.tiles[cx]) {
+			if !b.containsCoords(cx, cy) {
 				return false
 			}
 			if b.tiles[cx][cy] != TILE_FLOOR {

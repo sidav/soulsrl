@@ -16,35 +16,52 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	bfW, bfH := len(b.tiles), len(b.tiles[0])
 
 	// render outline:
-	c.setStyle(tcell.ColorWhite, tcell.ColorDarkRed)
+	c.setStyle(tcell.ColorWhite, tcell.ColorDarkBlue)
 	c.drawRect(0, 1, bfW+1, bfH+1)
+
 	// render the battlefield itself
+	c.setOffsets(bf_x_offset, bf_y_offset)
+	char := '?'
+	fgColor := tcell.ColorBlack
+	bgColor := tcell.ColorDarkMagenta
+	invertColorOnAction := false
 	for x := range b.tiles {
 		for y := range b.tiles[x] {
+			c.resetStyle()
 			switch b.tiles[x][y] {
 			case TILE_WALL:
-				c.style = c.style.Background(tcell.ColorDarkRed)
-				c.putChar(' ', x+bf_x_offset, y+bf_y_offset)
+				bgColor = tcell.ColorDarkBlue
+				char = ' '
+				invertColorOnAction = false
 			case TILE_FLOOR:
-				c.resetStyle()
-				c.putChar('.', x+bf_x_offset, y+bf_y_offset)
+				fgColor = tcell.ColorGray
+				bgColor = tcell.ColorBlack
+				invertColorOnAction = true
+				char = '.'
 			}
+			if invertColorOnAction {
+				c.setColorForAction(b, b.getActionPresentAt(x, y))
+			} else {
+				c.setStyle(fgColor, bgColor)
+			}
+			c.putChar(char, x, y)
 		}
 	}
-	for _, e := range b.actions {
-		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-		c.putChar(' ', e.x+bf_x_offset, e.y+bf_y_offset)
-	}
+	//for _, e := range b.actions {
+	//	c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+	//	c.putChar(' ', e.x, e.y)
+	//}
 	c.resetStyle()
 	for _, e := range b.mobs {
-		c.renderMobAtCoords(b, e, e.x+bf_x_offset, e.y+bf_y_offset)
+		c.renderMobAtCoords(b, e, e.x, e.y)
 	}
 	c.resetStyle()
-	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+bf_x_offset+1, 1)
+	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+1, 1)
 	//c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
 	//c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
 	//c.renderLogAt(log, 0, bf_y_offset+bfH+1)
 	c.screen.Show()
+	c.setOffsets(0, 0)
 }
 //
 func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
@@ -54,8 +71,8 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 		view = []string{"@"}
 	case 2:
 		view = []string{
-			"@@",
-			"@@",
+			"@|",
+			"\\/",
 		}
 	case 3:
 		view = []string{
@@ -68,7 +85,7 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	for i := 0; i < e.size; i++ {
 		for j := 0; j < e.size; j++ {
 			if b.getActionPresentAt(x+i, y+j) != nil {
-				c.setStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+				c.setColorForAction(b, b.getActionPresentAt(x+i, y+j))
 			} else {
 				c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
 			}
@@ -77,42 +94,20 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	}
 	// render dir, safe to remove
 	cx, cy := e.getCentralCoord()
-	c.putChar('X', cx+e.dirX+bf_x_offset, cy+e.dirY+bf_y_offset)
+	if b.getActionPresentAt(cx+e.dirX, cy+e.dirY) != nil {
+		c.setColorForAction(b, b.getActionPresentAt(cx+e.dirX, cy+e.dirY))
+	} else {
+		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+	}
+	c.putChar('X', cx+e.dirX, cy+e.dirY)
 }
 
-//func (c *consoleIO) renderPlayerBattlefieldUI(xCoord int, b *battlefield) {
-//	var lines = []string{
-//		fmt.Sprintf("HP: %d/%d", b.player.hitpoints, b.player.getMaxHp()),
-//		fmt.Sprintf("1) Prim Wpn: %s", b.player.primaryWeapon.GetName()),
-//		"   |x to swap|   ",
-//		fmt.Sprintf("2) Scnd Wpn: %s", b.player.secondaryWeapon.GetName()),
-//		fmt.Sprintf("3) Itm: %dx %s",
-//			b.player.currentConsumable.AsConsumable.Amount,
-//			b.player.currentConsumable.GetName()),
-//		"",
-//		"ENEMIES:",
-//	}
-//	enemiesLinesStart := len(lines)
-//	for i := range b.enemies {
-//		lines = append(lines, fmt.Sprintf("  %s (%s)",
-//			b.enemies[i].getName(),
-//			getAttackDescriptionString(b.player.primaryWeapon, b.enemies[i]),
-//		))
-//	}
-//	for i := range lines {
-//		c.putColorTaggedString(lines[i], xCoord, i)
-//	}
-//	// render enemies for those enemy lines
-//	for i, e := range b.enemies {
-//		c.renderEnemyAtCoords(e, b.currentTick, xCoord, enemiesLinesStart+i)
-//	}
-//}
-//
-//func (c *consoleIO) getCharForEnemy(heads int) rune {
-//	if heads < 10 {
-//		return rune(strconv.Itoa(heads)[0])
-//	} else if heads < 16 {
-//		return []rune{'A', 'B', 'C', 'D', 'E', 'F'}[heads-10]
-//	}
-//	return '?'
-//}
+func (c *consoleIO) setColorForAction(b *battlefield, act *action) {
+	if act != nil {
+		if act.tickToOccur - b.currentTick > TICKS_IN_COMBAT_TURN {
+			c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
+		} else {
+			c.setStyle(tcell.ColorBlack, tcell.ColorRed)
+		}
+	}
+}

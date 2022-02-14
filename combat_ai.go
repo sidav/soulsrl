@@ -14,8 +14,8 @@ func (b *battlefield) actAsMob(m *mob) {
 		return
 	} else {
 		// move by coords
-		mobAtCoords := b.getMobInSquare(m.x+m.dirX, m.y+m.dirY, m.size)
-		if b.isRectFullyPassable(m.x+m.dirX, m.y+m.dirY, m.size) && (mobAtCoords == nil || mobAtCoords == m) {
+		mobAtCoords := b.getMobInSquareOtherThan(m.x+m.dirX, m.y+m.dirY, m.size, m)
+		if b.isRectFullyPassable(m.x+m.dirX, m.y+m.dirY, m.size) && mobAtCoords == nil {
 			m.x += m.dirX
 			m.y += m.dirY
 			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN

@@ -9,6 +9,7 @@ const (
 	bf_x_offset = 1
 	bf_y_offset = 2
 )
+
 //
 func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Clear()
@@ -61,10 +62,11 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+1, 1)
 	//c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
 	//c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
-	c.renderLogAt(log, 0, bfH+1)
+	c.renderLogAt(log, 0, bfH+2)
 	c.screen.Show()
 	c.setOffsets(0, 0)
 }
+
 //
 func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	var view []string
@@ -106,7 +108,7 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 
 func (c *consoleIO) setColorForAction(b *battlefield, act *action) {
 	if act != nil {
-		if act.tickToOccur - b.currentTick > TICKS_IN_COMBAT_TURN {
+		if act.tickToOccur-b.currentTick > TICKS_IN_COMBAT_TURN {
 			c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
 		} else {
 			c.setStyle(tcell.ColorBlack, tcell.ColorRed)

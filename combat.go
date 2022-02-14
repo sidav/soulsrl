@@ -16,8 +16,8 @@ type battlefield struct {
 
 func newBattlefield() *battlefield {
 	b := &battlefield{}
-	bfW := rnd.RandInRange(3, 12)*2+1
-	bfH := rnd.RandInRange(3, 7)*2+1
+	bfW := rnd.RandInRange(3, 12)*2 + 1
+	bfH := rnd.RandInRange(3, 7)*2 + 1
 	b.tiles = make([][]int, bfW)
 	for i := range b.tiles {
 		b.tiles[i] = make([]int, bfH)
@@ -29,7 +29,7 @@ func newBattlefield() *battlefield {
 	b.mobs[0].name = "Giant"
 	b.mobs[1].name = "Swordmaster"
 
-	totalWalls := bfW*bfH * 10/100
+	totalWalls := bfW * bfH * 7 / 100
 	for i := 0; i < totalWalls; {
 		x, y := rnd.RandInRange(0, bfW-1), rnd.RandInRange(0, bfH-1)
 		if b.getMobPresentAt(x, y) == nil {
@@ -69,9 +69,11 @@ func (b *battlefield) getMobPresentAt(x, y int) *mob {
 	return nil
 }
 
-func (b *battlefield) getMobInSquare(x, y, w int) *mob {
-	// TODO: CHECK WHY IT DOESN'T WORK
+func (b *battlefield) getMobInSquareOtherThan(x, y, w int, otherThan *mob) *mob {
 	for _, m := range b.mobs {
+		if m == otherThan {
+			continue
+		}
 		if doTwoSquaresOverlap(x, y, w, m.x, m.y, m.size) {
 			return m
 		}

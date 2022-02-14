@@ -26,6 +26,8 @@ func newBattlefield() *battlefield {
 	b.mobs = append(b.mobs, newMob(0, 0))
 	b.mobs = append(b.mobs, newMob(bfW-1, bfH-1))
 	b.mobs[0].size = 3
+	b.mobs[0].name = "Giant"
+	b.mobs[1].name = "Swordmaster"
 
 	totalWalls := bfW*bfH * 10/100
 	for i := 0; i < totalWalls; {

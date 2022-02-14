@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"github.com/sidav/sidavgorandom/fibrandom"
 	"math"
+	"soulsrl/game_log"
 )
 
 var (
 	io  consoleIO
 	rnd *fibrandom.FibRandom
+	log *game_log.GameLog
 	exitGame bool
 )
 
@@ -24,6 +26,8 @@ func main() {
 		fy = ft * math.Sin(math.Pi/4) + fy * math.Cos(math.Pi/4) + 0.1
 	}
 	io.init()
+	log = &game_log.GameLog{}
+	log.Init(3)
 	rnd = &fibrandom.FibRandom{}
 	rnd.InitDefault()
 	defer io.close()

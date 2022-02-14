@@ -6,6 +6,7 @@ type mob struct {
 	dirX, dirY    int
 	nextTickToAct int
 	ap            *attackPattern
+	name          string
 }
 
 func (m *mob) getCentralCoord() (int, int) {

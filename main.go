@@ -30,7 +30,6 @@ func main() {
 
 	b := newBattlefield()
 	for !exitGame {
-		io.renderBattlefield(b)
 		b.combatGameLoop()
 	}
 }

@@ -1,6 +1,7 @@
 package main
 
 func (b *battlefield) combatGameLoop() {
+	io.renderBattlefield(b)
 	key := io.readKey()
 	if key == "ESCAPE" {
 		exitGame = true

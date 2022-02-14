@@ -47,10 +47,12 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 			c.putChar(char, x, y)
 		}
 	}
-	//for _, e := range b.actions {
-	//	c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
-	//	c.putChar(' ', e.x, e.y)
-	//}
+	for _, e := range b.actions {
+		if e.tickToOccur == b.currentTick {
+			c.setStyle(tcell.ColorYellow, tcell.ColorBlack)
+			c.putChar('*', e.x, e.y)
+		}
+	}
 	c.resetStyle()
 	for _, e := range b.mobs {
 		c.renderMobAtCoords(b, e, e.x, e.y)

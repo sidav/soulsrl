@@ -67,6 +67,16 @@ func (b *battlefield) getMobPresentAt(x, y int) *mob {
 	return nil
 }
 
+func (b *battlefield) getMobInSquare(x, y, w int) *mob {
+	// TODO: CHECK WHY IT DOESN'T WORK
+	for _, m := range b.mobs {
+		if doTwoSquaresOverlap(x, y, w, m.x, m.y, m.size) {
+			return m
+		}
+	}
+	return nil
+}
+
 func (b *battlefield) getActionPresentAt(x, y int) *action {
 	for _, a := range b.actions {
 		if a.x == x && a.y == y {

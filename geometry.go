@@ -65,11 +65,22 @@ func rectContainsCoords(rx, ry, w, h, x, y int) bool {
 }
 
 func doTwoSquaresOverlap(x1, y1, w1, x2, y2, w2 int) bool {
-	// reduce width, because of 1-width squares
-	w1--
-	w2--
-	return x1 < x2+w2 && x1+w1 > x2 &&
-		y1 > y2+w2 && y1+w1 < y2
+	return areTwoCellRectsOverlapping(x1, y1, w1, w1, x2, y2, w2, w2)
+}
+
+func areTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
+	// WARNING:
+	// ALL "-1"s HERE ARE BECAUSE OF WE ARE IN CELLS SPACE
+	// I.E. A SINGLE CELL IS 1x1 RECTANGLE
+	// SO RECTS (0, 0, 1x1) AND (1, 0, 1x1) ARE NOT OVERLAPPING IN THIS SPACE (BUT SHOULD IN EUCLIDEAN OF COURSE)
+	right1 := x1 + w1 - 1
+	bottom1 := y1 + h1 - 1
+	right2 := x2 + w2 - 1
+	bottom2 := y2 + h2 - 1
+	return !(x2 > right1 ||
+		right2 < x1 ||
+		y2 > bottom1 ||
+		bottom2 < y1)
 }
 
 func scaleCoords(x, y, scale int) [][]int {

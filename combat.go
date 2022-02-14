@@ -16,8 +16,8 @@ type battlefield struct {
 
 func newBattlefield() *battlefield {
 	b := &battlefield{}
-	bfW := 25 //  rnd.RandInRange(7, 10)
-	bfH := 15  // rnd.RandInRange(7, 10)
+	bfW := rnd.RandInRange(3, 12)*2+1
+	bfH := rnd.RandInRange(3, 7)*2+1
 	b.tiles = make([][]int, bfW)
 	for i := range b.tiles {
 		b.tiles[i] = make([]int, bfH)

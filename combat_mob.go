@@ -15,6 +15,11 @@ func (m *mob) getCentralCoord() (int, int) {
 	return m.x + m.size/2, m.y + m.size/2
 }
 
+func (m *mob) containsCoords(x, y int) bool {
+	return m.x <= x && x < m.x+m.size && m.y <= y && y < m.y+m.size
+}
+
+// rewrite, too hardcoded
 func newMob(x, y int) *mob {
 	u := &mob{
 		x:    x,

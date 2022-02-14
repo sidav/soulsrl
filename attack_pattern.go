@@ -40,14 +40,14 @@ var patternsTable = map[int]*attackPattern {
 		relativeCoords: [][]int{
 			{1, 0},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_RIGHT_SLASH: {
 		relativeCoords: [][]int{
 			{1, 0},
 			{1, 1},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_SLASH: {
 		relativeCoords: [][]int{
@@ -55,7 +55,7 @@ var patternsTable = map[int]*attackPattern {
 			{1, 0},
 			{1, 1},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_BIG_SLASH: {
 		relativeCoords: [][]int{
@@ -65,20 +65,20 @@ var patternsTable = map[int]*attackPattern {
 			{1, 1},
 			{0, 1},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: 3*TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_LUNGE: {
 		relativeCoords: [][]int{
 			{1, 0},
 			{2, 0},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_TWO_SIDES: {
 		relativeCoords: [][]int{
 			{1, 0},
 			{-1, 0},
 		},
-		ticksToPerform: 10,
+		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
 	},
 }

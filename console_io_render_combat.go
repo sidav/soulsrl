@@ -31,12 +31,12 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 			}
 		}
 	}
-	for _, e := range b.events {
+	for _, e := range b.actions {
 		c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
 		c.putChar(' ', e.x+bf_x_offset, e.y+bf_y_offset)
 	}
 	c.resetStyle()
-	for _, e := range b.units {
+	for _, e := range b.mobs {
 		c.renderMobAtCoords(b, e, e.x+bf_x_offset, e.y+bf_y_offset)
 	}
 	c.resetStyle()

@@ -23,7 +23,7 @@ func getVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
 //	return x, y
 //}
 
-// doesn't work well when x != 0, y != 0 and coords are not diagonal
+// doesn't work well when (x != 0 && y != 0 && coords are not diagonal)
 func stupidRotateVector45(x, y int) (int, int) {
 	initialLen := max(abs(x), abs(y))
 	t := x
@@ -54,6 +54,14 @@ func sign(x int) int {
 		return -1
 	}
 	return 1
+}
+
+func doTwoSquaresOverlap(x1, y1, w1, x2, y2, w2 int) bool {
+	// reduce width, because of 1-width squares
+	w1--
+	w2--
+	return x1 < x2+w2 && x1+w1 > x2 &&
+		y1 > y2+w2 && y1+w1 < y2
 }
 
 func scaleCoords(x, y, scale int) [][]int {

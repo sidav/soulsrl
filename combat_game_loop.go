@@ -6,15 +6,13 @@ func (b *battlefield) combatGameLoop() {
 		exitGame = true
 	}
 
-	for _, e := range b.units {
+	for _, e := range b.mobs {
 		if e.nextTickToAct > b.currentTick {
 			continue
 		}
-		e.dirX, e.dirY = stupidRotateVector45(e.dirX, e.dirY)
-		e.nextTickToAct = b.currentTick + e.ap.ticksToPerform + 5
-		b.applyAttackPattern(e, e.ap, e.dirX, e.dirY)
+		b.actAsMob(e)
 	}
 
-	b.applyEvents()
+	b.applyActions()
 	b.currentTick++
 }

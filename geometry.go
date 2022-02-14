@@ -29,7 +29,7 @@ func stupidRotateVector45(x, y int) (int, int) {
 	t := x
 	x = x - y
 	y = t + y
-	return sign(x)*initialLen, sign(y)*initialLen
+	return sign(x) * initialLen, sign(y) * initialLen
 }
 
 func abs(x int) int {
@@ -54,6 +54,10 @@ func sign(x int) int {
 		return -1
 	}
 	return 1
+}
+
+func orthogonalDistance(x1, y1, x2, y2 int) int {
+	return max(abs(x1-x2), abs(y1-y2))
 }
 
 func squareContainsCoords(sx, sy, w, x, y int) bool {
@@ -99,7 +103,7 @@ func getSquareByVectorFromSquareOfSameSize(vx, vy, topleftx, toplefty, size int)
 	newtoplefty := toplefty + vy*size
 	for x := 0; x < size; x++ {
 		for y := 0; y < size; y++ {
-			rectCoords = append(rectCoords, []int{newtopleftx+x, newtoplefty+y})
+			rectCoords = append(rectCoords, []int{newtopleftx + x, newtoplefty + y})
 		}
 	}
 	return rectCoords

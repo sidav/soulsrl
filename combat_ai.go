@@ -1,5 +1,7 @@
 package main
 
+import "soulsrl/line"
+
 func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.dirX, m.y+m.dirY
 	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.OneChanceFrom(10) {
@@ -8,10 +10,8 @@ func (b *battlefield) actAsMob(m *mob) {
 		return
 	}
 
-	if rnd.OneChanceFrom(10) {
-		// attack coords
-		b.applyAttackPattern(m, m.ap, m.dirX, m.dirY)
-		m.nextTickToAct = b.currentTick + m.ap.ticksToPerform
+	if rnd.OneChanceFrom(5) && b.tryAttackAsMob(m) {
+		return
 	} else {
 		// move by coords
 		mobAtCoords := b.getMobInSquare(m.x+m.dirX, m.y+m.dirY, m.size)
@@ -25,5 +25,21 @@ func (b *battlefield) actAsMob(m *mob) {
 			return
 		}
 	}
+}
 
+func (b *battlefield) tryAttackAsMob(m *mob) bool {
+	mcx, mcy := m.getCentralCoord()
+	for _, anotherMob := range b.mobs {
+		if anotherMob == m {
+			continue
+		}
+		amcx, amcy := anotherMob.getCentralCoord()
+		if orthogonalDistance(mcx, mcy, amcx, amcy) <= m.size+m.size/2+anotherMob.size+anotherMob.size/2 {
+			m.dirX, m.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
+			b.applyAttackPattern(m, m.ap, m.dirX, m.dirY)
+			m.nextTickToAct = b.currentTick + m.ap.ticksToPerform
+			return true
+		}
+	}
+	return false
 }

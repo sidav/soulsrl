@@ -1,6 +1,8 @@
 package main
 
 import (
+	"soulsrl/data"
+	"strconv"
 	"time"
 )
 
@@ -40,6 +42,15 @@ func (b *battlefield) workPlayerInput() {
 	dirx, diry := readKeyToVector(key)
 	if !(dirx == 0 && diry == 0) {
 		b.tryMoveMobByVector(b.player, dirx, diry)
+	}
+
+	if '1' <= rune(key[0]) && rune(key[0]) <= '9' {
+		skillNumber, _ := strconv.Atoi(key)
+		skillNumber--  // because numeration is from 0 in code
+		if skillNumber < len(b.player.rightHand.AsWeapon.GetData().AttackPatternCodes) {
+			ap := data.AttackPatternsTable[b.player.rightHand.AsWeapon.GetData().AttackPatternCodes[skillNumber]]
+			log.AppendMessagef("Using %s", ap.Name)
+		}
 	}
 
 	// everything below is for testing, safe to delete

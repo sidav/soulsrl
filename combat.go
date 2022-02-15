@@ -95,15 +95,15 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 	return nil
 }
 
-func (b *battlefield) applyAttackPattern(u *mob, ap *data.AttackPattern, vectorX, vectorY int) {
+func (b *battlefield) applyAttackPattern(acting *mob, ap *data.AttackPattern, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
-	patternCoords := ap.GetScaledRelativeCoordsByVector(vectorX, vectorY, u.size)
+	patternCoords := ap.GetScaledRelativeCoordsByVector(vectorX, vectorY, acting.size)
 	for _, coord := range patternCoords {
 		b.actions = append(b.actions, &action{
 			tickToOccur: tickToOccur,
-			owner:       u,
-			x:           u.x + coord[0],
-			y:           u.y + coord[1],
+			owner:       acting,
+			x:           acting.x + coord[0],
+			y:           acting.y + coord[1],
 		})
 	}
 }

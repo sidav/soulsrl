@@ -6,6 +6,7 @@ import (
 
 type AttackPattern struct {
 	RelativeCoords       [][]int
+	ReachInUnitSizes     int
 	durationInTurnTenths int
 }
 
@@ -48,6 +49,7 @@ var PatternsTable = map[int]*AttackPattern{
 		RelativeCoords: [][]int{
 			{1, 0},
 		},
+		ReachInUnitSizes:     1,
 		durationInTurnTenths: 10,
 	},
 	APATTERN_RIGHT_SLASH: {
@@ -55,6 +57,7 @@ var PatternsTable = map[int]*AttackPattern{
 			{1, 0},
 			{1, 1},
 		},
+		ReachInUnitSizes:     1,
 		durationInTurnTenths: 10,
 	},
 	APATTERN_SLASH: {
@@ -63,6 +66,7 @@ var PatternsTable = map[int]*AttackPattern{
 			{1, 0},
 			{1, 1},
 		},
+		ReachInUnitSizes:     1,
 		durationInTurnTenths: 20,
 	},
 	APATTERN_BIG_SLASH: {
@@ -73,6 +77,7 @@ var PatternsTable = map[int]*AttackPattern{
 			{1, 1},
 			{0, 1},
 		},
+		ReachInUnitSizes:     1,
 		durationInTurnTenths: 30,
 	},
 	APATTERN_LUNGE: {
@@ -80,6 +85,7 @@ var PatternsTable = map[int]*AttackPattern{
 			{1, 0},
 			{2, 0},
 		},
+		ReachInUnitSizes:     2,
 		durationInTurnTenths: 20,
 	},
 	APATTERN_TWO_SIDES: {
@@ -87,6 +93,7 @@ var PatternsTable = map[int]*AttackPattern{
 			{1, 0},
 			{-1, 0},
 		},
+		ReachInUnitSizes:     1,
 		durationInTurnTenths: 20,
 	},
 }

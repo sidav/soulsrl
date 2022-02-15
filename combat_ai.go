@@ -7,6 +7,7 @@ import (
 )
 
 type mobAi struct {
+	dirX, dirY                                                int
 	changeDirPercent, attackPercent, changeDirInCombatPercent int
 }
 

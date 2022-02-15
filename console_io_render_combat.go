@@ -59,12 +59,12 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 		c.renderMobAtCoords(b, e, e.x, e.y)
 	}
 	c.resetStyle()
-	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+1, 1)
 	//c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
 	//c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
-	c.renderLogAt(log, 0, bfH+2)
-	c.screen.Show()
 	c.setOffsets(0, 0)
+	c.renderLogAt(log, 0, bfH+3)
+	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+2, 0)
+	c.screen.Show()
 }
 
 //

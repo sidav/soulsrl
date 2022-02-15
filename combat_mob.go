@@ -10,7 +10,6 @@ type mob struct {
 	ai *mobAi
 	// topleft coord
 	x, y, size    int
-	dirX, dirY    int
 	nextTickToAct int
 
 	name string

@@ -97,13 +97,15 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 		}
 	}
 	// render dir, safe to remove
-	cx, cy := e.getCentralCoord()
-	if b.getActionPresentAt(cx+e.dirX, cy+e.dirY) != nil {
-		c.setColorForAction(b, b.getActionPresentAt(cx+e.dirX, cy+e.dirY))
-	} else {
-		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+	if e.ai != nil {
+		cx, cy := e.getCentralCoord()
+		if b.getActionPresentAt(cx+e.ai.dirX, cy+e.ai.dirY) != nil {
+			c.setColorForAction(b, b.getActionPresentAt(cx+e.ai.dirX, cy+e.ai.dirY))
+		} else {
+			c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+		}
+		c.putChar('X', cx+e.ai.dirX, cy+e.ai.dirY)
 	}
-	c.putChar('X', cx+e.dirX, cy+e.dirY)
 }
 
 func (c *consoleIO) setColorForAction(b *battlefield, act *action) {

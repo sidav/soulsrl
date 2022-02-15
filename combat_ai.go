@@ -20,12 +20,12 @@ func initDefaultAi() *mobAi {
 }
 
 func (b *battlefield) actAsMob(m *mob) {
-	newx, newy := m.x+m.dirX, m.y+m.dirY
-	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.PercentChance(m.ai.changeDirPercent) {
+	newx, newy := m.x+m.ai.dirX, m.y+m.ai.dirY
+	if m.ai.dirX == 0 && m.ai.dirY == 0 || !b.containsCoords(newx, newy) || rnd.PercentChance(m.ai.changeDirPercent) {
 		coordsList := b.getListOfVectorsToPassableCoordsForMob(m)
 		if len(coordsList) > 0 {
 			selected := coordsList[rnd.Rand(len(coordsList))]
-			m.dirX, m.dirY = selected[0], selected[1]
+			m.ai.dirX, m.ai.dirY = selected[0], selected[1]
 			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
 			return
 		}
@@ -37,10 +37,10 @@ func (b *battlefield) actAsMob(m *mob) {
 		}
 	} else {
 		// move by coords
-		moved := b.tryMoveMobByVector(m, m.dirX, m.dirY)
+		moved := b.tryMoveMobByVector(m, m.ai.dirX, m.ai.dirY)
 		if !moved {
 			if rnd.PercentChance(m.ai.changeDirInCombatPercent) {
-				m.dirX, m.dirY = 0, 0 // so it will be changed later
+				m.ai.dirX, m.ai.dirY = 0, 0 // so it will be changed later
 				return
 			}
 		}
@@ -64,8 +64,8 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 			mcx, mcy := m.getCentralCoord()
 			amcx, amcy := anotherMob.getCentralCoord()
 			ap := data.AttackPatternsTable[applicableAttacks[rnd.Rand(len(applicableAttacks))]]
-			m.dirX, m.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
-			b.applyAttackPattern(m, ap, m.dirX, m.dirY)
+			m.ai.dirX, m.ai.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
+			b.applyAttackPattern(m, ap, m.ai.dirX, m.ai.dirY)
 			m.nextTickToAct = b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 			return true
 		}

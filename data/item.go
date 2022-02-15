@@ -1,5 +1,5 @@
 package data
 
 type Item struct {
-	AsWeapon *weapon
+	AsWeapon *Weapon
 }

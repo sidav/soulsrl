@@ -1,6 +1,7 @@
 package main
 
 import (
+	"soulsrl/data"
 	"soulsrl/geometry"
 	"soulsrl/geometry/line"
 )
@@ -34,16 +35,25 @@ func (b *battlefield) actAsMob(m *mob) {
 }
 
 func (b *battlefield) tryAttackAsMob(m *mob) bool {
-	mcx, mcy := m.getCentralCoord()
 	for _, anotherMob := range b.mobs {
 		if anotherMob == m {
 			continue
 		}
-		amcx, amcy := anotherMob.getCentralCoord()
-		if geometry.OrthogonalDistance(mcx, mcy, amcx, amcy) <= m.size+m.size/2+anotherMob.size+anotherMob.size/2 {
+		var applicableAttacks []int
+		for _, apc := range m.rightHand.AsWeapon.GetData().AttackPatternCodes {
+			ap := data.AttackPatternsTable[apc]
+			attackReach := ap.ReachInUnitSizes * m.size
+			if geometry.DistanceBetweenSquares(m.x, m.y, m.size, anotherMob.x, anotherMob.y, anotherMob.size) <= m.size*attackReach {
+				applicableAttacks = append(applicableAttacks, apc)
+			}
+		}
+		if len(applicableAttacks) > 0 {
+			mcx, mcy := m.getCentralCoord()
+			amcx, amcy := anotherMob.getCentralCoord()
+			ap := data.AttackPatternsTable[applicableAttacks[rnd.Rand(len(applicableAttacks))]]
 			m.dirX, m.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
-			b.applyAttackPattern(m, m.ap, m.dirX, m.dirY)
-			m.nextTickToAct = b.currentTick + m.ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
+			b.applyAttackPattern(m, ap, m.dirX, m.dirY)
+			m.nextTickToAct = b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 			return true
 		}
 	}

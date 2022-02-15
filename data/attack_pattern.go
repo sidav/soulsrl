@@ -6,8 +6,10 @@ import (
 
 type AttackPattern struct {
 	RelativeCoords       [][]int
-	ReachInUnitSizes     int
 	durationInTurnTenths int
+
+	// for helping calculations
+	ReachInUnitSizes int
 }
 
 func (ap *AttackPattern) GetDurationForTurnTicks(ticks int) int {
@@ -44,7 +46,7 @@ const (
 	APATTERN_TWO_SIDES
 )
 
-var PatternsTable = map[int]*AttackPattern{
+var AttackPatternsTable = map[int]*AttackPattern{
 	APATTERN_SIMPLE_STRIKE: {
 		RelativeCoords: [][]int{
 			{1, 0},

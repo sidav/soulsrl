@@ -3,6 +3,7 @@ package main
 import (
 	"soulsrl/data"
 	"soulsrl/geometry"
+	"strings"
 )
 
 type mob struct {
@@ -10,8 +11,10 @@ type mob struct {
 	x, y, size    int
 	dirX, dirY    int
 	nextTickToAct int
-	ap            *data.AttackPattern
-	name          string
+
+	name string
+
+	rightHand *data.Item
 }
 
 func (m *mob) getCentralCoord() (int, int) {
@@ -25,17 +28,20 @@ func (m *mob) containsCoords(x, y int) bool {
 	return geometry.SquareContainsCoords(m.x, m.y, m.size, x, y)
 }
 
-// rewrite, too hardcoded
-func newMob(x, y int) *mob {
+func newMob(name string, x, y int) *mob {
 	u := &mob{
 		x:    x,
 		y:    y,
-		size: 1,
-		dirX: 1,
-		dirY: 0,
+		name: name,
 	}
-
-	u.ap = data.PatternsTable[data.APATTERN_SLASH]
+	switch strings.ToLower(name) {
+	case "giant":
+		u.size = 3
+		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
+	case "swordmaster":
+		u.size = 1
+		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}}
+	}
 
 	return u
 }

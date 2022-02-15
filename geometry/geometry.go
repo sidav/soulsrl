@@ -87,6 +87,46 @@ func DoTwoCellRectsOverlap(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
 		bottom2 < y1)
 }
 
+func DistanceBetweenSquares(x1, y1, w1, x2, y2, w2 int) int {
+	return DistanceBetweenRectangles(x1, y1, w1, w1, x2, y2, w2, w2)
+}
+
+func DistanceBetweenRectangles(x1, y1, w1, h1, x2, y2, w2, h2 int) int {
+	w1--
+	h1--
+	w2--
+	h2--
+	left := x2+w2 < x1
+	right := x1+w1 < x2
+	bottom := y2+h2 < y1
+	top := y1+h1 < y2
+	if top && left {
+		return OrthogonalDistance(x1, y1+h1, x2+w2, y2)
+	}
+	if left && bottom {
+		return OrthogonalDistance(x1, y1, x2+w2, y2+h2)
+	}
+	if bottom && right {
+		return OrthogonalDistance(x1+w1, y1, x2, y2+h2)
+	}
+	if right && top {
+		return OrthogonalDistance(x1+w1, y1+h1, x2, y2)
+	}
+	if left {
+		return x1 - x2 - w2
+	}
+	if right {
+		return x2 - x1 - w1
+	}
+	if bottom {
+		return y1 - y2 - h2
+	}
+	if top {
+		return y2 - y1 - h1
+	}
+	return 0 // intersect
+}
+
 func ScaleCoords(x, y, scale int) [][]int {
 	var scaled [][]int
 	for nx := 0; nx < scale; nx++ {

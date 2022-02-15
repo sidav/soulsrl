@@ -1,52 +1,63 @@
 package data
 
-type weapon struct {
-	code int
+type Weapon struct {
+	Code int
+}
+
+func (w *Weapon) GetData() *weaponData {
+	return weaponsTable[w.Code]
 }
 
 type weaponData struct {
-	name               string
+	Name               string
 	dnum, dval, dmod   int
-	attackPatternCodes []int
+	AttackPatternCodes []int
 }
 
-var weaponsTable = []*weaponData{
-	{
-		name: "Broken Sword",
+const (
+	WEAPON_BROKENSWORD = iota
+	WEAPON_SHORTSWORD
+	WEAPON_LONGSWORD
+	WEAPON_SPEAR
+)
+
+var weaponsTable = map[int]*weaponData{
+	WEAPON_BROKENSWORD: {
+		Name: "Broken Sword",
 		dnum: 1,
 		dval: 3,
 		dmod: 0,
-		attackPatternCodes: []int{
+		AttackPatternCodes: []int{
 			APATTERN_SIMPLE_STRIKE,
 			APATTERN_RIGHT_SLASH,
 		},
 	},
-	{
-		name: "Short Sword",
+	WEAPON_SHORTSWORD: {
+		Name: "Short Sword",
 		dnum: 2,
 		dval: 6,
 		dmod: 0,
-		attackPatternCodes: []int{
+		AttackPatternCodes: []int{
 			APATTERN_SIMPLE_STRIKE,
 			APATTERN_RIGHT_SLASH,
 		},
 	},
-	{
-		name: "Long Sword",
+	WEAPON_LONGSWORD: {
+		Name: "Long Sword",
 		dnum: 2,
 		dval: 6,
 		dmod: 2,
-		attackPatternCodes: []int{
+		AttackPatternCodes: []int{
 			APATTERN_SIMPLE_STRIKE,
 			APATTERN_SLASH,
 		},
 	},
-	{
-		name: "Spear",
+	WEAPON_SPEAR: {
+		Name: "Spear",
 		dnum: 1,
 		dval: 6,
 		dmod: 3,
-		attackPatternCodes: []int{
+		AttackPatternCodes: []int{
 			APATTERN_SIMPLE_STRIKE,
 			APATTERN_LUNGE,
 		},

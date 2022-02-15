@@ -7,6 +7,7 @@ import (
 )
 
 type mob struct {
+	ai *mobAi
 	// topleft coord
 	x, y, size    int
 	dirX, dirY    int
@@ -33,6 +34,7 @@ func newMob(name string, x, y int) *mob {
 		x:    x,
 		y:    y,
 		name: name,
+		ai:   initDefaultAi(),
 	}
 	switch strings.ToLower(name) {
 	case "giant":

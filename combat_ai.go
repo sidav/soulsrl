@@ -6,9 +6,21 @@ import (
 	"soulsrl/geometry/line"
 )
 
+type mobAi struct {
+	changeDirPercent, attackPercent, changeDirInCombatPercent int
+}
+
+func initDefaultAi() *mobAi {
+	return &mobAi{
+		changeDirPercent:         10,
+		attackPercent:            50,
+		changeDirInCombatPercent: 5,
+	}
+}
+
 func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.dirX, m.y+m.dirY
-	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.OneChanceFrom(10) {
+	if m.dirX == 0 && m.dirY == 0 || !b.containsCoords(newx, newy) || rnd.PercentChance(m.ai.changeDirPercent) {
 		coordsList := b.getListOfVectorsToPassableCoordsForMob(m)
 		if len(coordsList) > 0 {
 			selected := coordsList[rnd.Rand(len(coordsList))]
@@ -18,8 +30,10 @@ func (b *battlefield) actAsMob(m *mob) {
 		}
 	}
 
-	if rnd.OneChanceFrom(2) && b.tryAttackAsMob(m) {
-		return
+	if rnd.PercentChance(m.ai.attackPercent) {
+		if b.tryAttackAsMob(m) {
+			return
+		}
 	} else {
 		// move by coords
 		mobAtCoords := b.getMobInSquareOtherThan(m.x+m.dirX, m.y+m.dirY, m.size, m)
@@ -28,8 +42,10 @@ func (b *battlefield) actAsMob(m *mob) {
 			m.y += m.dirY
 			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
 		} else {
-			m.dirX, m.dirY = 0, 0 // so it will be changed later
-			return
+			if rnd.PercentChance(m.ai.changeDirInCombatPercent) {
+				m.dirX, m.dirY = 0, 0 // so it will be changed later
+				return
+			}
 		}
 	}
 }

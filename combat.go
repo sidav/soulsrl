@@ -1,6 +1,9 @@
 package main
 
-import "soulsrl/geometry"
+import (
+	"soulsrl/data"
+	"soulsrl/geometry"
+)
 
 const (
 	TILE_FLOOR = iota
@@ -92,9 +95,9 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 	return nil
 }
 
-func (b *battlefield) applyAttackPattern(u *mob, ap *attackPattern, vectorX, vectorY int) {
-	tickToOccur := b.currentTick + ap.ticksToPerform
-	patternCoords := ap.getScaledRelativeCoordsByVector(vectorX, vectorY, u.size)
+func (b *battlefield) applyAttackPattern(u *mob, ap *data.AttackPattern, vectorX, vectorY int) {
+	tickToOccur := b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
+	patternCoords := ap.GetScaledRelativeCoordsByVector(vectorX, vectorY, u.size)
 	for _, coord := range patternCoords {
 		b.actions = append(b.actions, &action{
 			tickToOccur: tickToOccur,

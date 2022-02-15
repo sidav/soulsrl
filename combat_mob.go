@@ -1,13 +1,16 @@
 package main
 
-import "soulsrl/geometry"
+import (
+	"soulsrl/data"
+	"soulsrl/geometry"
+)
 
 type mob struct {
 	// topleft coord
 	x, y, size    int
 	dirX, dirY    int
 	nextTickToAct int
-	ap            *attackPattern
+	ap            *data.AttackPattern
 	name          string
 }
 
@@ -32,7 +35,7 @@ func newMob(x, y int) *mob {
 		dirY: 0,
 	}
 
-	u.ap = patternsTable[APATTERN_SLASH]
+	u.ap = data.PatternsTable[data.APATTERN_SLASH]
 
 	return u
 }

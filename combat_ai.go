@@ -43,7 +43,7 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 		if geometry.OrthogonalDistance(mcx, mcy, amcx, amcy) <= m.size+m.size/2+anotherMob.size+anotherMob.size/2 {
 			m.dirX, m.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
 			b.applyAttackPattern(m, m.ap, m.dirX, m.dirY)
-			m.nextTickToAct = b.currentTick + m.ap.ticksToPerform
+			m.nextTickToAct = b.currentTick + m.ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 			return true
 		}
 	}

@@ -1,23 +1,29 @@
-package main
+package data
 
-import "soulsrl/geometry"
+import (
+	"soulsrl/geometry"
+)
 
-type attackPattern struct {
-	relativeCoords [][]int
-	ticksToPerform int
+type AttackPattern struct {
+	RelativeCoords       [][]int
+	durationInTurnTenths int
 }
 
-func (ap *attackPattern) getRelativeCoordsByVector(vx, vy int) [][]int {
+func (ap *AttackPattern) GetDurationForTurnTicks(ticks int) int {
+	return ticks * ap.durationInTurnTenths / 10
+}
+
+func (ap *AttackPattern) GetRelativeCoordsByVector(vx, vy int) [][]int {
 	var coords [][]int
-	for _, coord := range ap.relativeCoords {
+	for _, coord := range ap.RelativeCoords {
 		rotatedX, rotatedY := geometry.GetVectorRotatedLikeVector(coord[0], coord[1], vx, vy)
 		coords = append(coords, []int{rotatedX, rotatedY})
 	}
 	return coords
 }
 
-func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
-	rotatedCoords := ap.getRelativeCoordsByVector(vx, vy)
+func (ap *AttackPattern) GetScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
+	rotatedCoords := ap.GetRelativeCoordsByVector(vx, vy)
 	var coords [][]int
 	for _, coord := range rotatedCoords {
 		squareForThis := geometry.MoveSquareByVector(coord[0], coord[1], 0, 0, size)
@@ -37,50 +43,50 @@ const (
 	APATTERN_TWO_SIDES
 )
 
-var patternsTable = map[int]*attackPattern{
+var PatternsTable = map[int]*AttackPattern{
 	APATTERN_SIMPLE_STRIKE: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{1, 0},
 		},
-		ticksToPerform: TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 10,
 	},
 	APATTERN_RIGHT_SLASH: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{1, 0},
 			{1, 1},
 		},
-		ticksToPerform: TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 10,
 	},
 	APATTERN_SLASH: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{1, -1},
 			{1, 0},
 			{1, 1},
 		},
-		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 20,
 	},
 	APATTERN_BIG_SLASH: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{0, -1},
 			{1, -1},
 			{1, 0},
 			{1, 1},
 			{0, 1},
 		},
-		ticksToPerform: 3 * TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 30,
 	},
 	APATTERN_LUNGE: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{1, 0},
 			{2, 0},
 		},
-		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 20,
 	},
 	APATTERN_TWO_SIDES: {
-		relativeCoords: [][]int{
+		RelativeCoords: [][]int{
 			{1, 0},
 			{-1, 0},
 		},
-		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
+		durationInTurnTenths: 20,
 	},
 }

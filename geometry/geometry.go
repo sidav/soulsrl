@@ -1,11 +1,11 @@
-package main
+package geometry
 
-func getVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
+func GetVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
 	// rotates vx, vy relative to (1, 0) until this (1, 0) is (rx, ry)
 	x, y := 1, 0
 	for x != rx || y != ry {
-		x, y = stupidRotateVector45(x, y)
-		vx, vy = stupidRotateVector45(vx, vy)
+		x, y = StupidRotateVector45(x, y)
+		vx, vy = StupidRotateVector45(vx, vy)
 	}
 	return vx, vy
 	//atan := math.Atan2(float64(ry), float64(rx))
@@ -24,7 +24,7 @@ func getVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
 //}
 
 // doesn't work well when (x != 0 && y != 0 && coords are not diagonal)
-func stupidRotateVector45(x, y int) (int, int) {
+func StupidRotateVector45(x, y int) (int, int) {
 	initialLen := max(abs(x), abs(y))
 	t := x
 	x = x - y
@@ -56,23 +56,23 @@ func sign(x int) int {
 	return 1
 }
 
-func orthogonalDistance(x1, y1, x2, y2 int) int {
+func OrthogonalDistance(x1, y1, x2, y2 int) int {
 	return max(abs(x1-x2), abs(y1-y2))
 }
 
-func squareContainsCoords(sx, sy, w, x, y int) bool {
-	return rectContainsCoords(sx, sy, w, w, x, y)
+func SquareContainsCoords(sx, sy, w, x, y int) bool {
+	return RectContainsCoords(sx, sy, w, w, x, y)
 }
 
-func rectContainsCoords(rx, ry, w, h, x, y int) bool {
+func RectContainsCoords(rx, ry, w, h, x, y int) bool {
 	return rx <= x && x < rx+w && ry <= y && y < ry+h
 }
 
-func doTwoSquaresOverlap(x1, y1, w1, x2, y2, w2 int) bool {
-	return areTwoCellRectsOverlapping(x1, y1, w1, w1, x2, y2, w2, w2)
+func DoTwoSquaresOverlap(x1, y1, w1, x2, y2, w2 int) bool {
+	return DoTwoCellRectsOverlap(x1, y1, w1, w1, x2, y2, w2, w2)
 }
 
-func areTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
+func DoTwoCellRectsOverlap(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
 	// WARNING:
 	// ALL "-1"s HERE ARE BECAUSE OF WE ARE IN CELLS SPACE
 	// I.E. A SINGLE CELL IS 1x1 RECTANGLE
@@ -87,7 +87,7 @@ func areTwoCellRectsOverlapping(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
 		bottom2 < y1)
 }
 
-func scaleCoords(x, y, scale int) [][]int {
+func ScaleCoords(x, y, scale int) [][]int {
 	var scaled [][]int
 	for nx := 0; nx < scale; nx++ {
 		for ny := 0; ny < scale; ny++ {
@@ -97,7 +97,7 @@ func scaleCoords(x, y, scale int) [][]int {
 	return scaled
 }
 
-func getSquareByVectorFromSquareOfSameSize(vx, vy, topleftx, toplefty, size int) [][]int {
+func MoveSquareByVector(vx, vy, topleftx, toplefty, size int) [][]int {
 	var rectCoords [][]int
 	newtopleftx := topleftx + vx*size
 	newtoplefty := toplefty + vy*size

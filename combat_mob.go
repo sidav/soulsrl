@@ -1,5 +1,7 @@
 package main
 
+import "soulsrl/geometry"
+
 type mob struct {
 	// topleft coord
 	x, y, size    int
@@ -17,7 +19,7 @@ func (m *mob) getCentralCoord() (int, int) {
 }
 
 func (m *mob) containsCoords(x, y int) bool {
-	return squareContainsCoords(m.x, m.y, m.size, x, y)
+	return geometry.SquareContainsCoords(m.x, m.y, m.size, x, y)
 }
 
 // rewrite, too hardcoded

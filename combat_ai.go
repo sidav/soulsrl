@@ -1,6 +1,7 @@
 package main
 
 import (
+	"soulsrl/geometry"
 	"soulsrl/geometry/line"
 )
 
@@ -39,7 +40,7 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 			continue
 		}
 		amcx, amcy := anotherMob.getCentralCoord()
-		if orthogonalDistance(mcx, mcy, amcx, amcy) <= m.size+m.size/2+anotherMob.size+anotherMob.size/2 {
+		if geometry.OrthogonalDistance(mcx, mcy, amcx, amcy) <= m.size+m.size/2+anotherMob.size+anotherMob.size/2 {
 			m.dirX, m.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
 			b.applyAttackPattern(m, m.ap, m.dirX, m.dirY)
 			m.nextTickToAct = b.currentTick + m.ap.ticksToPerform

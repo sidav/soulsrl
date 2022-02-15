@@ -1,5 +1,7 @@
 package main
 
+import "soulsrl/geometry"
+
 const (
 	TILE_FLOOR = iota
 	TILE_WALL
@@ -42,7 +44,7 @@ func newBattlefield() *battlefield {
 }
 
 func (b *battlefield) containsCoords(x, y int) bool {
-	return rectContainsCoords(0, 0, len(b.tiles), len(b.tiles[0]), x, y)
+	return geometry.RectContainsCoords(0, 0, len(b.tiles), len(b.tiles[0]), x, y)
 }
 
 func (b *battlefield) areAllTilesInRectPassable(x, y, w int) bool {
@@ -74,7 +76,7 @@ func (b *battlefield) getMobInSquareOtherThan(x, y, w int, otherThan *mob) *mob 
 		if m == otherThan {
 			continue
 		}
-		if doTwoSquaresOverlap(x, y, w, m.x, m.y, m.size) {
+		if geometry.DoTwoSquaresOverlap(x, y, w, m.x, m.y, m.size) {
 			return m
 		}
 	}

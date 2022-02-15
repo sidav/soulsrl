@@ -1,5 +1,7 @@
 package main
 
+import "soulsrl/geometry"
+
 type attackPattern struct {
 	relativeCoords [][]int
 	ticksToPerform int
@@ -8,7 +10,7 @@ type attackPattern struct {
 func (ap *attackPattern) getRelativeCoordsByVector(vx, vy int) [][]int {
 	var coords [][]int
 	for _, coord := range ap.relativeCoords {
-		rotatedX, rotatedY := getVectorRotatedLikeVector(coord[0], coord[1], vx, vy)
+		rotatedX, rotatedY := geometry.GetVectorRotatedLikeVector(coord[0], coord[1], vx, vy)
 		coords = append(coords, []int{rotatedX, rotatedY})
 	}
 	return coords
@@ -18,7 +20,7 @@ func (ap *attackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]i
 	rotatedCoords := ap.getRelativeCoordsByVector(vx, vy)
 	var coords [][]int
 	for _, coord := range rotatedCoords {
-		squareForThis := getSquareByVectorFromSquareOfSameSize(coord[0], coord[1], 0, 0, size)
+		squareForThis := geometry.MoveSquareByVector(coord[0], coord[1], 0, 0, size)
 		for _, sqcoord := range squareForThis {
 			coords = append(coords, sqcoord)
 		}
@@ -35,7 +37,7 @@ const (
 	APATTERN_TWO_SIDES
 )
 
-var patternsTable = map[int]*attackPattern {
+var patternsTable = map[int]*attackPattern{
 	APATTERN_SIMPLE_STRIKE: {
 		relativeCoords: [][]int{
 			{1, 0},
@@ -55,7 +57,7 @@ var patternsTable = map[int]*attackPattern {
 			{1, 0},
 			{1, 1},
 		},
-		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
+		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_BIG_SLASH: {
 		relativeCoords: [][]int{
@@ -65,20 +67,20 @@ var patternsTable = map[int]*attackPattern {
 			{1, 1},
 			{0, 1},
 		},
-		ticksToPerform: 3*TICKS_IN_COMBAT_TURN,
+		ticksToPerform: 3 * TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_LUNGE: {
 		relativeCoords: [][]int{
 			{1, 0},
 			{2, 0},
 		},
-		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
+		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
 	},
 	APATTERN_TWO_SIDES: {
 		relativeCoords: [][]int{
 			{1, 0},
 			{-1, 0},
 		},
-		ticksToPerform: 2*TICKS_IN_COMBAT_TURN,
+		ticksToPerform: 2 * TICKS_IN_COMBAT_TURN,
 	},
 }

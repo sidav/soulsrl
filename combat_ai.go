@@ -1,6 +1,8 @@
 package main
 
-import "soulsrl/line"
+import (
+	"soulsrl/geometry/line"
+)
 
 func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.dirX, m.y+m.dirY

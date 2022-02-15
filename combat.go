@@ -14,6 +14,7 @@ const (
 
 type battlefield struct {
 	tiles       [][]int
+	player      *mob
 	mobs        []*mob
 	actions     []*action
 	currentTick int
@@ -28,8 +29,9 @@ func newBattlefield() *battlefield {
 		b.tiles[i] = make([]int, bfH)
 	}
 
-	b.mobs = append(b.mobs, newMob("Giant", 0, 0))
-	b.mobs = append(b.mobs, newMob("Swordmaster", bfW-1, bfH-1))
+	//b.mobs = append(b.mobs, newMob("Giant"))
+	//b.mobs = append(b.mobs, newMob("Swordmaster"))
+	//b.mobs[1].x, b.mobs[1].y = bfW-1, bfH-1
 	// fmt.Printf("Distance is %d\n", geometry.DistanceBetweenSquares(b.mobs[0].x, b.mobs[0].y, b.mobs[0].size, b.mobs[1].x, b.mobs[1].y, b.mobs[1].size))
 
 	totalWalls := bfW * bfH * 7 / 100
@@ -42,6 +44,24 @@ func newBattlefield() *battlefield {
 	}
 
 	return b
+}
+
+func (b *battlefield) addMobAtRandomEmptyPlace(m *mob) {
+	size := m.size
+	var goodCoords [][]int
+	for x := 0; x < len(b.tiles)-size; x++ {
+		for y := 0; y < len(b.tiles[0])-size; y++ {
+			if b.areAllTilesInRectPassable(x, y, size) && b.getMobInSquareOtherThan(x, y, size, nil) == nil {
+				goodCoords = append(goodCoords, []int{x, y})
+			}
+		}
+	}
+	if len(goodCoords) > 0 {
+		ind := rnd.Rand(len(goodCoords))
+		m.x = goodCoords[ind][0]
+		m.y = goodCoords[ind][1]
+		b.mobs = append(b.mobs, m)
+	}
 }
 
 func (b *battlefield) containsCoords(x, y int) bool {

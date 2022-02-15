@@ -80,19 +80,19 @@ func MoveSquareByVector(vx, vy, topleftx, toplefty, size int) [][]int {
 }
 
 // returns true as first result if found anything
-func FindCoordsForNeighbouringSquareOfSameSizeContainingCoords(sqx, sqy, size, x, y int) (bool, int, int) {
-	if SquareContainsCoords(sqx, sqy, size, x, y) {
+func FindCoordsForNeighbouringSquareOfSameSizeContainingCoords(sqx, sqy, size, contX, contY int) (bool, int, int) {
+	if SquareContainsCoords(sqx, sqy, size, contX, contY) {
 		return false, 0, 0
 	}
-	if DistanceBetweenSquares(sqx, sqy, size, x, y, size) > size {
+	if DistanceBetweenSquares(sqx, sqy, size, contX, contY, size) > size {
 		return false, 0, 0
 	}
 	var foundX, foundY, foundDistanceToCenter int
 	foundDistanceToCenter = 999 // foundDist should be 1 anyway
 
 	// stupid algorithm of brute force
-	for tryx := x-(size-1); tryx <= x; tryx++ {
-		for tryy := y-(size-1); tryy <= y; tryy++ {
+	for tryx := contX -(size-1); tryx <= contX; tryx++ {
+		for tryy := contY -(size-1); tryy <= contY; tryy++ {
 			// fmt.Printf("Trying %d, %d\n", tryx, tryy)
 			distBetwSquares := DistanceBetweenSquares(sqx, sqy, size, tryx, tryy, size)
 			if distBetwSquares != 1 {
@@ -100,7 +100,7 @@ func FindCoordsForNeighbouringSquareOfSameSizeContainingCoords(sqx, sqy, size, x
 				continue
 			}
 			centerX, centerY := tryx+size/2, tryy+size/2
-			dist := sqDistance(x, y, centerX, centerY)
+			dist := sqDistance(contX, contY, centerX, centerY)
 			// fmt.Printf(" Center is at %d,%d; comparing %d with %d...\n", centerX, centerY, dist, foundDistanceToCenter)
 			if dist < foundDistanceToCenter {
 				// fmt.Printf("   ...distance is picked.\n")

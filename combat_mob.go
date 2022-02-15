@@ -29,14 +29,15 @@ func (m *mob) containsCoords(x, y int) bool {
 	return geometry.SquareContainsCoords(m.x, m.y, m.size, x, y)
 }
 
-func newMob(name string, x, y int) *mob {
+func newMob(name string) *mob {
 	u := &mob{
-		x:    x,
-		y:    y,
 		name: name,
 		ai:   initDefaultAi(),
 	}
 	switch strings.ToLower(name) {
+	case "player":
+		u.size = 1
+		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}}
 	case "giant":
 		u.size = 3
 		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}

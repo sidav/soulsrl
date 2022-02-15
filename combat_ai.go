@@ -18,7 +18,7 @@ func (b *battlefield) actAsMob(m *mob) {
 		}
 	}
 
-	if rnd.OneChanceFrom(5) && b.tryAttackAsMob(m) {
+	if rnd.OneChanceFrom(2) && b.tryAttackAsMob(m) {
 		return
 	} else {
 		// move by coords
@@ -43,7 +43,7 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 		for _, apc := range m.rightHand.AsWeapon.GetData().AttackPatternCodes {
 			ap := data.AttackPatternsTable[apc]
 			attackReach := ap.ReachInUnitSizes * m.size
-			if geometry.DistanceBetweenSquares(m.x, m.y, m.size, anotherMob.x, anotherMob.y, anotherMob.size) <= m.size*attackReach {
+			if geometry.DistanceBetweenSquares(m.x, m.y, m.size, anotherMob.x, anotherMob.y, anotherMob.size) <= attackReach {
 				applicableAttacks = append(applicableAttacks, apc)
 			}
 		}

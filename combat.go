@@ -30,6 +30,7 @@ func newBattlefield() *battlefield {
 
 	b.mobs = append(b.mobs, newMob("Giant", 0, 0))
 	b.mobs = append(b.mobs, newMob("Swordmaster", bfW-1, bfH-1))
+	// fmt.Printf("Distance is %d\n", geometry.DistanceBetweenSquares(b.mobs[0].x, b.mobs[0].y, b.mobs[0].size, b.mobs[1].x, b.mobs[1].y, b.mobs[1].size))
 
 	totalWalls := bfW * bfH * 7 / 100
 	for i := 0; i < totalWalls; {

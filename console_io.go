@@ -8,9 +8,11 @@ import (
 )
 
 type consoleIO struct {
-	screen                        tcell.Screen
-	style                         tcell.Style
-	offsetX, offsetY              int
+	screen           tcell.Screen
+	style            tcell.Style
+	offsetX, offsetY int
+
+	battlefieldActionsMap [][]int // for combat
 }
 
 func (c *consoleIO) init() {
@@ -127,7 +129,6 @@ func (c *consoleIO) drawStringCenteredAround(s string, x, y int) {
 	c.putColorTaggedString(s, x-text_colors.TaggedStringLength(s)/2, y)
 }
 
-
 func (c *consoleIO) renderLogAt(log *game_log.GameLog, x, y int) {
 	for i, m := range log.LastMessages {
 		c.resetStyle()
@@ -157,10 +158,10 @@ func (c *consoleIO) putWrappedTextInRect(text string, x, y, w int) int {
 				addLineOffset = false
 			}
 			if addLineOffset && currentLineLength == 0 {
-				word = " "+word
+				word = " " + word
 			}
 			c.putColorTaggedStringNonResetting(word+" ", x+currentLineLength, y+currentLine)
-			currentLineLength += text_colors.TaggedStringLength(word)+1
+			currentLineLength += text_colors.TaggedStringLength(word) + 1
 		}
 		// fill with spaces to enforce overdraw
 		if currentLineLength < w {

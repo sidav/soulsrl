@@ -14,6 +14,7 @@ const (
 //
 func (c *consoleIO) renderBattlefield(b *battlefield) {
 	c.screen.Clear()
+	c.makeActionsMap(b)
 	c.putColorTaggedString("COMBAT: ", 0, 0)
 	bfW, bfH := len(b.tiles), len(b.tiles[0])
 
@@ -41,10 +42,9 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 				invertColorOnAction = true
 				char = '.'
 			}
+			c.setStyle(fgColor, bgColor)
 			if invertColorOnAction {
-				c.setColorForAction(b, b.getActionPresentAt(x, y))
-			} else {
-				c.setStyle(fgColor, bgColor)
+				c.setColorForActionAt(x, y)
 			}
 			c.putChar(char, x, y)
 		}
@@ -88,22 +88,16 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	c.resetStyle()
 	for i := 0; i < e.size; i++ {
 		for j := 0; j < e.size; j++ {
-			if b.getActionPresentAt(x+i, y+j) != nil {
-				c.setColorForAction(b, b.getActionPresentAt(x+i, y+j))
-			} else {
-				c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
-			}
+			c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
+			c.setColorForActionAt(x+i, y+j)
 			c.putUncoloredString(string(view[j][i]), x+i, y+j)
 		}
 	}
 	// render dir, safe to remove
 	if e.ai != nil {
 		cx, cy := e.getCentralCoord()
-		if b.getActionPresentAt(cx+e.ai.dirX, cy+e.ai.dirY) != nil {
-			c.setColorForAction(b, b.getActionPresentAt(cx+e.ai.dirX, cy+e.ai.dirY))
-		} else {
-			c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
-		}
+		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
+		c.setColorForActionAt(cx+e.ai.dirX, cy+e.ai.dirY)
 		c.putChar('X', cx+e.ai.dirX, cy+e.ai.dirY)
 	}
 }
@@ -130,12 +124,32 @@ func (c *consoleIO) renderBattlefieldUI(b *battlefield, xcoord int) {
 	}
 }
 
-func (c *consoleIO) setColorForAction(b *battlefield, act *action) {
-	if act != nil {
-		if act.tickToOccur-b.currentTick > TICKS_IN_COMBAT_TURN {
-			c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
-		} else {
-			c.setStyle(tcell.ColorBlack, tcell.ColorRed)
+func (c *consoleIO) makeActionsMap(b *battlefield) {
+	actsmap := make([][]int, len(b.tiles))
+	for i := range b.tiles {
+		actsmap[i] = make([]int, len(b.tiles[i]))
+	}
+	for _, a := range b.actions {
+		if b.containsCoords(a.x, a.y) {
+			number := 2
+			if a.tickToOccur == b.currentTick {
+				number = 1
+			}
+			actsmap[a.x][a.y] = number
 		}
+	}
+	c.battlefieldActionsMap = actsmap
+}
+
+func (c *consoleIO) setColorForActionAt(x, y int) {
+	switch c.battlefieldActionsMap[x][y] {
+	case 0:
+		return
+	case 1:
+		c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
+	case 2:
+		c.setStyle(tcell.ColorBlack, tcell.ColorRed)
+	default:
+		panic("no color!")
 	}
 }

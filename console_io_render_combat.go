@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gdamore/tcell"
+	"soulsrl/data"
 )
 
 const (
@@ -60,10 +61,9 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	}
 	c.resetStyle()
 	//c.putChar('@', b.player.x+bf_x_offset, b.player.y+bf_y_offset)
-	//c.renderPlayerBattlefieldUI(bf_x_offset+bfW+1, b)
 	c.setOffsets(0, 0)
+	c.renderBattlefieldUI(b, bfW+2)
 	c.renderLogAt(log, 0, bfH+3)
-	c.putUncoloredString(fmt.Sprintf("TICK %d", b.currentTick), bfW+2, 0)
 	c.screen.Show()
 }
 
@@ -105,6 +105,28 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 			c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
 		}
 		c.putChar('X', cx+e.ai.dirX, cy+e.ai.dirY)
+	}
+}
+
+func (c *consoleIO) renderBattlefieldUI(b *battlefield, xcoord int) {
+	c.putUncoloredString(fmt.Sprintf("TICK: %d", b.currentTick), xcoord, 0)
+	c.putUncoloredString(fmt.Sprintf("LIFE: %d/%d", b.player.hitpoints, 10), xcoord, 1)
+	c.putUncoloredString(fmt.Sprintf("STMN: %d/%d", b.player.stamina, 10), xcoord, 2)
+	c.putUncoloredString(fmt.Sprintf("STNC: STEADY"), xcoord, 2)
+	currLine := 4
+	for i, code := range b.player.rightHand.AsWeapon.GetData().AttackPatternCodes {
+		ap := data.AttackPatternsTable[code]
+		c.putUncoloredString(fmt.Sprintf("%d) %s", i+1, ap.Name), xcoord, currLine)
+		currLine++
+	}
+	currLine++
+	for _, mob := range b.mobs {
+		if mob == b.player {
+			continue
+		}
+		c.putUncoloredString(fmt.Sprintf("%s: hp %d/%d stm %d/%d", mob.name, mob.hitpoints, 10, mob.stamina, 10),
+			xcoord, currLine)
+		currLine++
 	}
 }
 

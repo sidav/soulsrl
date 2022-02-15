@@ -12,6 +12,8 @@ type mob struct {
 	x, y, size    int
 	nextTickToAct int
 
+	hitpoints, stamina int
+
 	name string
 
 	rightHand *data.Item

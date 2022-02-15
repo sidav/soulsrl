@@ -5,15 +5,16 @@ import (
 )
 
 type AttackPattern struct {
-	RelativeCoords       [][]int
-	durationInTurnTenths int
+	Name                  string
+	RelativeCoords        [][]int
+	durationInTurnLengths int
 
-	// for helping calculations
+	// for helping ai calculations
 	ReachInUnitSizes int
 }
 
 func (ap *AttackPattern) GetDurationForTurnTicks(ticks int) int {
-	return ticks * ap.durationInTurnTenths / 10
+	return ticks * ap.durationInTurnLengths / 10
 }
 
 func (ap *AttackPattern) GetRelativeCoordsByVector(vx, vy int) [][]int {
@@ -48,30 +49,34 @@ const (
 
 var AttackPatternsTable = map[int]*AttackPattern{
 	APATTERN_SIMPLE_STRIKE: {
+		Name: "Strike",
 		RelativeCoords: [][]int{
 			{1, 0},
 		},
-		ReachInUnitSizes:     1,
-		durationInTurnTenths: 10,
+		ReachInUnitSizes:      1,
+		durationInTurnLengths: 10,
 	},
 	APATTERN_RIGHT_SLASH: {
+		Name: "Right Slash",
 		RelativeCoords: [][]int{
 			{1, 0},
 			{1, 1},
 		},
-		ReachInUnitSizes:     1,
-		durationInTurnTenths: 10,
+		ReachInUnitSizes:      1,
+		durationInTurnLengths: 10,
 	},
 	APATTERN_SLASH: {
+		Name: "Full Slash",
 		RelativeCoords: [][]int{
 			{1, -1},
 			{1, 0},
 			{1, 1},
 		},
-		ReachInUnitSizes:     1,
-		durationInTurnTenths: 20,
+		ReachInUnitSizes:      1,
+		durationInTurnLengths: 20,
 	},
 	APATTERN_BIG_SLASH: {
+		Name: "Big Slash",
 		RelativeCoords: [][]int{
 			{0, -1},
 			{1, -1},
@@ -79,23 +84,25 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{1, 1},
 			{0, 1},
 		},
-		ReachInUnitSizes:     1,
-		durationInTurnTenths: 30,
+		ReachInUnitSizes:      1,
+		durationInTurnLengths: 30,
 	},
 	APATTERN_LUNGE: {
+		Name: "Lunge",
 		RelativeCoords: [][]int{
 			{1, 0},
 			{2, 0},
 		},
-		ReachInUnitSizes:     2,
-		durationInTurnTenths: 20,
+		ReachInUnitSizes:      2,
+		durationInTurnLengths: 20,
 	},
 	APATTERN_TWO_SIDES: {
+		Name: "Two-side strike",
 		RelativeCoords: [][]int{
 			{1, 0},
 			{-1, 0},
 		},
-		ReachInUnitSizes:     1,
-		durationInTurnTenths: 20,
+		ReachInUnitSizes:      1,
+		durationInTurnLengths: 20,
 	},
 }

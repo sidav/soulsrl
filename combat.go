@@ -140,3 +140,14 @@ func (b *battlefield) getListOfVectorsToPassableCoordsForMob(m *mob) [][]int {
 	}
 	return coords
 }
+
+func (b *battlefield) tryMoveMobByVector(m *mob, vx, vy int) bool {
+	mobAtCoords := b.getMobInSquareOtherThan(m.x+vx, m.y+vy, m.size, m)
+	if  mobAtCoords == nil && b.areAllTilesInRectPassable(m.x+vx, m.y+vy, m.size) {
+		m.x += vx
+		m.y += vy
+		m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
+		return true
+	}
+	return false
+}

@@ -39,7 +39,7 @@ func (b *battlefield) workPlayerInput() {
 	}
 	dirx, diry := readKeyToVector(key)
 	if !(dirx == 0 && diry == 0) {
-		
+		b.tryMoveMobByVector(b.player, dirx, diry)
 	}
 
 	// everything below is for testing, safe to delete

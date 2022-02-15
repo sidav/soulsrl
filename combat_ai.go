@@ -36,12 +36,8 @@ func (b *battlefield) actAsMob(m *mob) {
 		}
 	} else {
 		// move by coords
-		mobAtCoords := b.getMobInSquareOtherThan(m.x+m.dirX, m.y+m.dirY, m.size, m)
-		if b.areAllTilesInRectPassable(m.x+m.dirX, m.y+m.dirY, m.size) && mobAtCoords == nil {
-			m.x += m.dirX
-			m.y += m.dirY
-			m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
-		} else {
+		moved := b.tryMoveMobByVector(m, m.dirX, m.dirY)
+		if !moved {
 			if rnd.PercentChance(m.ai.changeDirInCombatPercent) {
 				m.dirX, m.dirY = 0, 0 // so it will be changed later
 				return

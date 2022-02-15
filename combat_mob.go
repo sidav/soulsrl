@@ -32,12 +32,12 @@ func (m *mob) containsCoords(x, y int) bool {
 func newMob(name string) *mob {
 	u := &mob{
 		name: name,
-		ai:   initDefaultAi(),
 	}
 	switch strings.ToLower(name) {
 	case "player":
 		u.size = 1
 		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}}
+		return u
 	case "giant":
 		u.size = 3
 		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
@@ -45,6 +45,6 @@ func newMob(name string) *mob {
 		u.size = 1
 		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}}
 	}
-
+	u.ai = initDefaultAi()
 	return u
 }

@@ -115,6 +115,7 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 
 func (b *battlefield) applyWeaponSkill(acting *mob, weaponSkill *data.WeaponSkill, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + weaponSkill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
+	acting.nextTickToAct = tickToOccur
 	patternCoords := weaponSkill.Pattern.GetListOfCoordsWhenApplied(acting.size, vectorX, vectorY)
 	for _, coord := range patternCoords {
 		if !b.containsCoords(acting.x + coord[0], acting.y + coord[1]) {

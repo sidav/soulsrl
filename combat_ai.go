@@ -66,7 +66,6 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 			ap := applicableAttacks[rnd.Rand(len(applicableAttacks))]
 			m.ai.dirX, m.ai.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
 			b.applyWeaponSkill(m, ap, m.ai.dirX, m.ai.dirY)
-			m.nextTickToAct = b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 			return true
 		}
 	}

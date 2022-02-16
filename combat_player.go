@@ -26,7 +26,7 @@ func (b *battlefield) workPlayerInput() {
 		if skillNumber < len(b.player.rightHand.AsWeapon.GetData().AttackPatterns) {
 			skill := b.player.rightHand.AsWeapon.GetData().AttackPatterns[skillNumber]
 			log.AppendMessagef("Using %s", skill.Pattern.Name)
-			selected, x, y := b.selectHowToUseSkill(skill)
+			selected, x, y := b.selectHowToUseSkill(skill, key)
 			if selected {
 				b.applyWeaponSkill(b.player, skill, x, y)
 			}
@@ -58,7 +58,7 @@ func (b *battlefield) workPlayerInput() {
 	}
 }
 
-func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill) (bool, int, int) {
+func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill, confirmButton string) (bool, int, int) {
 	log.AppendMessagef("Select direction for %s", ws.Pattern.Name)
 	io.renderBattlefield(b, [][]int{})
 	selected := false
@@ -68,7 +68,7 @@ func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill) (bool, int, int)
 		if key == "ESCAPE" {
 			break
 		}
-		if key == "ENTER" && (x != 0 || y != 0) {
+		if (key == "ENTER" || key == confirmButton) && (x != 0 || y != 0) {
 			selected = true
 			break
 		}

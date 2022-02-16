@@ -142,6 +142,9 @@ func (c *consoleIO) makeActionsMap(b *battlefield) {
 }
 
 func (c *consoleIO) setColorForActionAt(x, y int) {
+	if x < 0 || y < 0 || x >= len(c.battlefieldActionsMap) || y >= len(c.battlefieldActionsMap[x]) {
+		return
+	}
 	switch c.battlefieldActionsMap[x][y] {
 	case 0:
 		return

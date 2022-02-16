@@ -45,9 +45,14 @@ func newMob(name string) *mob {
 	case "giant":
 		u.size = 3
 		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
+	case "beast":
+		u.size = 2
+		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
 	case "swordmaster":
 		u.size = 1
-		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}}
+		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}}
+	default:
+		panic("No such mob!")
 	}
 	u.ai = initDefaultAi()
 	return u

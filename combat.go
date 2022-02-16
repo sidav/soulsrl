@@ -117,7 +117,9 @@ func (b *battlefield) applyAttackPattern(acting *mob, ap *data.AttackPattern, ve
 	tickToOccur := b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	patternCoords := ap.GetListOfCoordsWhenApplied(acting.size, vectorX, vectorY)
 	for _, coord := range patternCoords {
-
+		if !b.containsCoords(coord[0], coord[1]) {
+			continue
+		}
 		b.actions = append(b.actions, &action{
 			tickToOccur: tickToOccur,
 			owner:       acting,

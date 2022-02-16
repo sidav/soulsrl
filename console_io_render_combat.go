@@ -51,7 +51,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 	}
 	for _, e := range b.actions {
 		if e.tickToOccur == b.currentTick {
-			c.setStyle(tcell.ColorYellow, tcell.ColorBlack)
+			c.setStyle(tcell.ColorRed, tcell.ColorBlack)
 			c.putChar('*', e.x, e.y)
 		}
 	}
@@ -132,6 +132,9 @@ func (c *consoleIO) makeActionsMap(b *battlefield) {
 	for _, a := range b.actions {
 		if b.containsCoords(a.x, a.y) {
 			number := 2
+			if a.tickToOccur - b.currentTick > TICKS_IN_COMBAT_TURN {
+				number = 2
+			}
 			if a.tickToOccur == b.currentTick {
 				number = 1
 			}
@@ -149,9 +152,9 @@ func (c *consoleIO) setColorForActionAt(x, y int) {
 	case 0:
 		return
 	case 1:
-		c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
-	case 2:
 		c.setStyle(tcell.ColorBlack, tcell.ColorRed)
+	case 2:
+		c.setStyle(tcell.ColorBlack, tcell.ColorYellow)
 	default:
 		panic("no color!")
 	}

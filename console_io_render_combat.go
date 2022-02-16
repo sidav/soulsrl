@@ -11,9 +11,11 @@ const (
 )
 
 //
-func (c *consoleIO) renderBattlefield(b *battlefield) {
-	c.screen.Clear()
+func (c *consoleIO) renderBattlefield(b *battlefield, potentialActionCoords [][]int) {
 	c.makeActionsMap(b)
+	c.potentialActionsCoords = potentialActionCoords
+
+	c.screen.Clear()
 	c.putColorTaggedString("COMBAT: ", 0, 0)
 	bfW, bfH := len(b.tiles), len(b.tiles[0])
 
@@ -43,7 +45,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield) {
 			}
 			c.setStyle(fgColor, bgColor)
 			if invertColorOnAction {
-				c.setColorForActionAt(x, y)
+				c.setColorForActionIfPresentAt(x, y)
 			}
 			c.putChar(char, x, y)
 		}
@@ -88,7 +90,7 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	for i := 0; i < e.size; i++ {
 		for j := 0; j < e.size; j++ {
 			c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
-			c.setColorForActionAt(x+i, y+j)
+			c.setColorForActionIfPresentAt(x+i, y+j)
 			c.putUncoloredString(string(view[j][i]), x+i, y+j)
 		}
 	}
@@ -96,7 +98,7 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 	if e.ai != nil {
 		cx, cy := e.getCentralCoord()
 		c.setStyle(tcell.ColorDarkMagenta, tcell.ColorBlack)
-		c.setColorForActionAt(cx+e.ai.dirX, cy+e.ai.dirY)
+		c.setColorForActionIfPresentAt(cx+e.ai.dirX, cy+e.ai.dirY)
 		c.putChar('X', cx+e.ai.dirX, cy+e.ai.dirY)
 	}
 }
@@ -142,7 +144,13 @@ func (c *consoleIO) makeActionsMap(b *battlefield) {
 	c.battlefieldActionsMap = actsmap
 }
 
-func (c *consoleIO) setColorForActionAt(x, y int) {
+func (c *consoleIO) setColorForActionIfPresentAt(x, y int) {
+	for _, coord := range c.potentialActionsCoords {
+		if coord[0] == x && coord[1] == y {
+			c.setStyle(tcell.ColorBlack, tcell.ColorDarkMagenta)
+			return
+		}
+	}
 	if x < 0 || y < 0 || x >= len(c.battlefieldActionsMap) || y >= len(c.battlefieldActionsMap[x]) {
 		return
 	}

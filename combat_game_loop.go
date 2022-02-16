@@ -7,10 +7,10 @@ import (
 func (b *battlefield) combatGameLoop() {
 	b.player = newMob("player")
 	for !exitGame {
-		io.renderBattlefield(b)
+		io.renderBattlefield(b, [][]int{})
 		for !exitGame && b.player.nextTickToAct <= b.currentTick {
 			b.workPlayerInput()
-			io.renderBattlefield(b)
+			io.renderBattlefield(b, [][]int{})
 		}
 		time.Sleep(40 * time.Millisecond)
 

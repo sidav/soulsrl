@@ -12,7 +12,8 @@ type consoleIO struct {
 	style            tcell.Style
 	offsetX, offsetY int
 
-	battlefieldActionsMap [][]int // for combat
+	battlefieldActionsMap  [][]int // for combat
+	potentialActionsCoords [][]int // for when player chooses how to strike with skill
 }
 
 func (c *consoleIO) init() {

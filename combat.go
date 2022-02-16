@@ -117,7 +117,7 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weaponSkill *data.WeaponSkil
 	tickToOccur := b.currentTick + weaponSkill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	patternCoords := weaponSkill.Pattern.GetListOfCoordsWhenApplied(acting.size, vectorX, vectorY)
 	for _, coord := range patternCoords {
-		if !b.containsCoords(coord[0], coord[1]) {
+		if !b.containsCoords(acting.x + coord[0], acting.y + coord[1]) {
 			continue
 		}
 		b.actions = append(b.actions, &action{

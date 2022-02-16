@@ -52,20 +52,20 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 		if anotherMob == m {
 			continue
 		}
-		var applicableAttacks []int
-		for _, apc := range m.rightHand.AsWeapon.GetData().AttackPatternCodes {
-			ap := data.AttackPatternsTable[apc]
+		var applicableAttacks []*data.WeaponSkill
+		for _, wskill := range m.rightHand.AsWeapon.GetData().AttackPatterns {
+			ap := wskill.Pattern
 			attackReach := ap.ReachInUnitSizes * m.size
 			if geometry.DistanceBetweenSquares(m.x, m.y, m.size, anotherMob.x, anotherMob.y, anotherMob.size) <= attackReach {
-				applicableAttacks = append(applicableAttacks, apc)
+				applicableAttacks = append(applicableAttacks, wskill)
 			}
 		}
 		if len(applicableAttacks) > 0 {
 			mcx, mcy := m.getCentralCoord()
 			amcx, amcy := anotherMob.getCentralCoord()
-			ap := data.AttackPatternsTable[applicableAttacks[rnd.Rand(len(applicableAttacks))]]
+			ap := applicableAttacks[rnd.Rand(len(applicableAttacks))]
 			m.ai.dirX, m.ai.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
-			b.applyAttackPattern(m, ap, m.ai.dirX, m.ai.dirY)
+			b.applyWeaponSkill(m, ap, m.ai.dirX, m.ai.dirY)
 			m.nextTickToAct = b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 			return true
 		}

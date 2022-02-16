@@ -7,14 +7,9 @@ import (
 type AttackPattern struct {
 	Name                  string
 	RelativeCoords        [][]int
-	durationInTurnLengths int
 
 	// for helping ai calculations
 	ReachInUnitSizes int
-}
-
-func (ap *AttackPattern) GetDurationForTurnTicks(ticks int) int {
-	return ticks * ap.durationInTurnLengths / 10
 }
 
 func (ap *AttackPattern) GetRelativeCoordsByVector(vx, vy int) [][]int {
@@ -58,7 +53,6 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{1, 0},
 		},
 		ReachInUnitSizes:      1,
-		durationInTurnLengths: 10,
 	},
 	APATTERN_RIGHT_SLASH: {
 		Name: "Right Slash",
@@ -67,7 +61,6 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{1, 1},
 		},
 		ReachInUnitSizes:      1,
-		durationInTurnLengths: 10,
 	},
 	APATTERN_SLASH: {
 		Name: "Full Slash",
@@ -77,7 +70,6 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{1, 1},
 		},
 		ReachInUnitSizes:      1,
-		durationInTurnLengths: 20,
 	},
 	APATTERN_BIG_SLASH: {
 		Name: "Big Slash",
@@ -89,7 +81,6 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{0, 1},
 		},
 		ReachInUnitSizes:      1,
-		durationInTurnLengths: 30,
 	},
 	APATTERN_LUNGE: {
 		Name: "Lunge",
@@ -98,7 +89,6 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{2, 0},
 		},
 		ReachInUnitSizes:      2,
-		durationInTurnLengths: 20,
 	},
 	APATTERN_TWO_SIDES: {
 		Name: "Two-side strike",
@@ -107,6 +97,5 @@ var AttackPatternsTable = map[int]*AttackPattern{
 			{-1, 0},
 		},
 		ReachInUnitSizes:      1,
-		durationInTurnLengths: 20,
 	},
 }

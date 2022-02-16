@@ -1,7 +1,6 @@
 package main
 
 import (
-	"soulsrl/data"
 	"strconv"
 )
 
@@ -23,9 +22,9 @@ func (b *battlefield) workPlayerInput() {
 	if '1' <= rune(key[0]) && rune(key[0]) <= '9' {
 		skillNumber, _ := strconv.Atoi(key)
 		skillNumber--  // because numeration is from 0 in code
-		if skillNumber < len(b.player.rightHand.AsWeapon.GetData().AttackPatternCodes) {
-			ap := data.AttackPatternsTable[b.player.rightHand.AsWeapon.GetData().AttackPatternCodes[skillNumber]]
-			log.AppendMessagef("Using %s", ap.Name)
+		if skillNumber < len(b.player.rightHand.AsWeapon.GetData().AttackPatterns) {
+			ap := b.player.rightHand.AsWeapon.GetData().AttackPatterns[skillNumber]
+			log.AppendMessagef("Using %s", ap.Pattern.Name)
 		}
 	}
 

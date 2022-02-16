@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gdamore/tcell"
-	"soulsrl/data"
 )
 
 const (
@@ -108,9 +107,8 @@ func (c *consoleIO) renderBattlefieldUI(b *battlefield, xcoord int) {
 	c.putUncoloredString(fmt.Sprintf("STMN: %d/%d", b.player.stamina, 10), xcoord, 2)
 	c.putUncoloredString(fmt.Sprintf("STNC: STEADY"), xcoord, 2)
 	currLine := 4
-	for i, code := range b.player.rightHand.AsWeapon.GetData().AttackPatternCodes {
-		ap := data.AttackPatternsTable[code]
-		c.putUncoloredString(fmt.Sprintf("%d) %s", i+1, ap.Name), xcoord, currLine)
+	for i, ap := range b.player.rightHand.AsWeapon.GetData().AttackPatterns {
+		c.putUncoloredString(fmt.Sprintf("%d) %s", i+1, ap.Pattern.Name), xcoord, currLine)
 		currLine++
 	}
 	currLine++

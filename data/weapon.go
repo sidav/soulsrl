@@ -8,10 +8,19 @@ func (w *Weapon) GetData() *weaponData {
 	return weaponsTable[w.Code]
 }
 
+type WeaponSkill struct {
+	Pattern               *AttackPattern
+	DurationInTurnLengths int
+}
+
+func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
+	return ticksPerTurn * ws.DurationInTurnLengths / 10
+}
+
 type weaponData struct {
-	Name               string
-	dnum, dval, dmod   int
-	AttackPatternCodes []int
+	Name             string
+	dnum, dval, dmod int
+	AttackPatterns   []*WeaponSkill
 }
 
 const (
@@ -27,9 +36,11 @@ var weaponsTable = map[int]*weaponData{
 		dnum: 1,
 		dval: 3,
 		dmod: 0,
-		AttackPatternCodes: []int{
-			APATTERN_SIMPLE_STRIKE,
-			APATTERN_RIGHT_SLASH,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths: 10,
+			},
 		},
 	},
 	WEAPON_SHORTSWORD: {
@@ -37,9 +48,15 @@ var weaponsTable = map[int]*weaponData{
 		dnum: 2,
 		dval: 6,
 		dmod: 0,
-		AttackPatternCodes: []int{
-			APATTERN_SIMPLE_STRIKE,
-			APATTERN_RIGHT_SLASH,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths: 10,
+			},
+			{
+				Pattern:               AttackPatternsTable[APATTERN_RIGHT_SLASH],
+				DurationInTurnLengths: 15,
+			},
 		},
 	},
 	WEAPON_LONGSWORD: {
@@ -47,9 +64,15 @@ var weaponsTable = map[int]*weaponData{
 		dnum: 2,
 		dval: 6,
 		dmod: 2,
-		AttackPatternCodes: []int{
-			APATTERN_SIMPLE_STRIKE,
-			APATTERN_SLASH,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths: 10,
+			},
+			{
+				Pattern:               AttackPatternsTable[APATTERN_SLASH],
+				DurationInTurnLengths: 25,
+			},
 		},
 	},
 	WEAPON_SPEAR: {
@@ -57,9 +80,15 @@ var weaponsTable = map[int]*weaponData{
 		dnum: 1,
 		dval: 6,
 		dmod: 3,
-		AttackPatternCodes: []int{
-			APATTERN_SIMPLE_STRIKE,
-			APATTERN_LUNGE,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths: 10,
+			},
+			{
+				Pattern:               AttackPatternsTable[APATTERN_LUNGE],
+				DurationInTurnLengths: 25,
+			},
 		},
 	},
 }

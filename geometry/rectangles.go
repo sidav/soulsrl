@@ -4,6 +4,16 @@ func SquareContainsCoords(sx, sy, w, x, y int) bool {
 	return RectContainsCoords(sx, sy, w, w, x, y)
 }
 
+func RectToCoords(x, y, w, h int) [][]int {
+	var coords [][]int
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
+			coords = append(coords, []int{i, j})
+		}
+	}
+	return coords
+}
+
 func RectContainsCoords(rx, ry, w, h, x, y int) bool {
 	return rx <= x && x < rx+w && ry <= y && y < ry+h
 }

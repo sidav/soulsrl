@@ -2,6 +2,7 @@ package data
 
 import (
 	"soulsrl/geometry"
+	"soulsrl/geometry/line"
 )
 
 const ( // how exactly skill coords will be determined
@@ -43,6 +44,13 @@ func (sp *SkillPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]in
 }
 
 func (sp *SkillPattern) GetListOfCoordsWhenApplied(actorSize, vx, vy int) [][]int {
+	return sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+}
+
+func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSize, targetX, targetY, targetSize int) [][]int {
+	actorCenterX, actorCenterY := actorX+actorSize/2, actorY+actorSize/2
+	targetCenterX, targetCenterY := targetX+targetSize/2, targetY+targetSize/2
+	vx, vy := line.GetNextStepForLine(actorCenterX, actorCenterY, targetCenterX, targetCenterY)
 	return sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
 }
 

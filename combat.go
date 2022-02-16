@@ -115,8 +115,9 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 
 func (b *battlefield) applyAttackPattern(acting *mob, ap *data.AttackPattern, vectorX, vectorY int) {
 	tickToOccur := b.currentTick + ap.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
-	patternCoords := ap.GetScaledRelativeCoordsByVector(vectorX, vectorY, acting.size)
+	patternCoords := ap.GetListOfCoordsWhenApplied(acting.size, vectorX, vectorY)
 	for _, coord := range patternCoords {
+
 		b.actions = append(b.actions, &action{
 			tickToOccur: tickToOccur,
 			owner:       acting,

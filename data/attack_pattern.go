@@ -26,7 +26,7 @@ func (ap *AttackPattern) GetRelativeCoordsByVector(vx, vy int) [][]int {
 	return coords
 }
 
-func (ap *AttackPattern) GetScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
+func (ap *AttackPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
 	rotatedCoords := ap.GetRelativeCoordsByVector(vx, vy)
 	var coords [][]int
 	for _, coord := range rotatedCoords {
@@ -36,6 +36,10 @@ func (ap *AttackPattern) GetScaledRelativeCoordsByVector(vx, vy, size int) [][]i
 		}
 	}
 	return coords
+}
+
+func (ap *AttackPattern) GetListOfCoordsWhenApplied(actorSize, vx, vy int) [][]int {
+	return ap.getScaledRelativeCoordsByVector(vx, vy, actorSize)
 }
 
 const (

@@ -9,10 +9,17 @@ type action struct {
 func (b *battlefield) applyActions() {
 	for i := 0; i < len(b.actions); i++ {
 		if b.currentTick >= b.actions[i].tickToOccur {
-			mobAtCoords := b.getMobPresentAt(b.actions[i].x, b.actions[i].y)
-			if mobAtCoords != nil && mobAtCoords != b.actions[i].owner {
-				log.AppendMessagef("%s hits %s!", b.actions[i].owner.name, mobAtCoords.name)
+			action := b.actions[i]
+			mobAtCoords := b.getMobPresentAt(action.x, action.y)
+			if mobAtCoords != nil && mobAtCoords != action.owner &&
+				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {
+
+				mobAtCoords.wasAlreadyAffectedByActionBy = action.owner
+				log.AppendMessagef("%s hits %s!", action.owner.name, mobAtCoords.name)
+				mobAtCoords.hitpoints--
 			}
+
+			// remove actions
 			b.actions[i] = b.actions[len(b.actions)-1]
 			b.actions = append(b.actions[:len(b.actions)-1])
 			i -= 1

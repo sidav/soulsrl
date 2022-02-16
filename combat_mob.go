@@ -17,6 +17,9 @@ type mob struct {
 	name string
 
 	rightHand *data.Item
+
+	// temp vars
+	wasAlreadyAffectedByActionBy *mob
 }
 
 func (m *mob) getCentralCoord() (int, int) {

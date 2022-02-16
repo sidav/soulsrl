@@ -17,6 +17,7 @@ func (b *battlefield) combatGameLoop() {
 		time.Sleep(40 * time.Millisecond)
 
 		for _, e := range b.mobs {
+			e.wasAlreadyAffectedByActionBy = nil
 			if e.nextTickToAct > b.currentTick || e.ai == nil {
 				continue
 			}

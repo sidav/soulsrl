@@ -9,7 +9,7 @@ func (w *Weapon) GetData() *weaponData {
 }
 
 type WeaponSkill struct {
-	Pattern               *AttackPattern
+	Pattern               *SkillPattern
 	DurationInTurnLengths int
 }
 

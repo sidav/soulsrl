@@ -28,7 +28,7 @@ func (b *battlefield) workPlayerInput() {
 			log.AppendMessagef("Using %s", skill.Pattern.Name)
 			selected, x, y := b.selectHowToUseSkill(skill, key)
 			if selected {
-				b.applyWeaponSkill(b.player, skill, x, y)
+				b.applyWeaponSkill(b.player, skill, b.player.x+x*b.player.size, b.player.y+y*b.player.size, b.player.size)
 			}
 		}
 	}
@@ -75,11 +75,12 @@ func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill, confirmButton st
 		x, y = readKeyToVector(key)
 		var potentialCoords [][]int
 		if x != 0 || y != 0 {
-			potentialCoords = ws.Pattern.GetListOfCoordsWhenApplied(b.player.size, x, y)
-			for i := range potentialCoords {
-				potentialCoords[i][0] += b.player.x
-				potentialCoords[i][1] += b.player.y
-			}
+			potentialCoords = ws.Pattern.GetListOfCoordsWhenAppliedAtRect(b.player.x, b.player.y, b.player.size,
+				b.player.x+x*b.player.size, b.player.y+y*b.player.size, b.player.size)
+			//for i := range potentialCoords {
+			//	potentialCoords[i][0] += b.player.x
+			//	potentialCoords[i][1] += b.player.y
+			//}
 		}
 		io.renderBattlefield(b, potentialCoords)
 	}

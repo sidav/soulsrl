@@ -51,7 +51,12 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 	actorCenterX, actorCenterY := actorX+actorSize/2, actorY+actorSize/2
 	targetCenterX, targetCenterY := targetX+targetSize/2, targetY+targetSize/2
 	vx, vy := line.GetNextStepForLine(actorCenterX, actorCenterY, targetCenterX, targetCenterY)
-	return sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+	coords := sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+	for _, c := range coords {
+		c[0] += actorX
+		c[1] += actorY
+	}
+	return coords
 }
 
 const (

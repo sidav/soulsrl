@@ -113,19 +113,19 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 	return nil
 }
 
-func (b *battlefield) applyWeaponSkill(acting *mob, weaponSkill *data.WeaponSkill, vectorX, vectorY int) {
+func (b *battlefield) applyWeaponSkill(acting *mob, weaponSkill *data.WeaponSkill, tx, ty, tsize int) {
 	tickToOccur := b.currentTick + weaponSkill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	acting.nextTickToAct = tickToOccur
-	patternCoords := weaponSkill.Pattern.GetListOfCoordsWhenApplied(acting.size, vectorX, vectorY)
+	patternCoords := weaponSkill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
 	for _, coord := range patternCoords {
-		if !b.containsCoords(acting.x + coord[0], acting.y + coord[1]) {
+		if !b.containsCoords(coord[0], coord[1]) {
 			continue
 		}
 		b.actions = append(b.actions, &action{
 			tickToOccur: tickToOccur,
 			owner:       acting,
-			x:           acting.x + coord[0],
-			y:           acting.y + coord[1],
+			x:           coord[0],
+			y:           coord[1],
 		})
 	}
 }

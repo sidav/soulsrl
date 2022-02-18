@@ -51,12 +51,25 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 	actorCenterX, actorCenterY := actorX+actorSize/2, actorY+actorSize/2
 	targetCenterX, targetCenterY := targetX+targetSize/2, targetY+targetSize/2
 	vx, vy := line.GetNextStepForLine(actorCenterX, actorCenterY, targetCenterX, targetCenterY)
-	coords := sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
-	for _, c := range coords {
-		c[0] += actorX
-		c[1] += actorY
+	switch sp.patternApplicationType {
+	case spTypeNearbyRect:
+		coverX, coverY := geometry.GetCoordsOfClosestCoordToRectFromRect(actorX, actorY, actorSize, actorSize,
+			targetX, targetY, targetSize, targetSize)
+		found, x, y := geometry.FindCoordsForNeighbouringSquareOfSameSizeContainingCoords(actorX, actorY, actorSize,
+			coverX, coverY)
+		if !found {
+			panic("Not found... Y  U NO FOUND?")
+		}
+		return geometry.RectToCoords(x, y, actorSize, actorSize)
+	case spTypeRelativeCoordinates:
+		coords := sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+		for _, c := range coords {
+			c[0] += actorX
+			c[1] += actorY
+		}
+		return coords
 	}
-	return coords
+	panic ("Y U NO IMPLEMENT")
 }
 
 const (
@@ -70,7 +83,7 @@ const (
 
 var AttackPatternsTable = map[int]*SkillPattern{
 	APATTERN_SIMPLE_STRIKE: {
-		patternApplicationType: spTypeRelativeCoordinates,
+		patternApplicationType: spTypeNearbyRect,
 		Name: "Strike",
 		RelativeCoords: [][]int{
 			{1, 0},

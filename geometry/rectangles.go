@@ -1,5 +1,7 @@
 package geometry
 
+import "soulsrl/geometry/line"
+
 func SquareContainsCoords(sx, sy, w, x, y int) bool {
 	return RectContainsCoords(sx, sy, w, w, x, y)
 }
@@ -39,6 +41,16 @@ func DoTwoCellRectsOverlap(x1, y1, w1, h1, x2, y2, w2, h2 int) bool {
 
 func DistanceBetweenSquares(x1, y1, w1, x2, y2, w2 int) int {
 	return DistanceBetweenRectangles(x1, y1, w1, w1, x2, y2, w2, w2)
+}
+
+func GetCoordsOfClosestCoordToRectFromRect(x1, y1, w1, h1, x2, y2, w2, h2 int) (int, int) {
+	linePoints := line.GetLine(x1+w1/2, y1+h1/2, x2+w2/2, y2+h2/2)
+	for _, point := range linePoints {
+		if RectContainsCoords(x2, y2, w2, h2, point.X, point.Y) {
+			return point.X, point.Y
+		}
+	}
+	panic("Y U NO CONTAIN")
 }
 
 func DistanceBetweenRectangles(x1, y1, w1, h1, x2, y2, w2, h2 int) int {

@@ -8,7 +8,7 @@ import (
 const ( // how exactly skill coords will be determined
 	spTypeNearbyRect = iota
 	spTypeRelativeCoordinates
-	spTypeTargetRect
+	spTypeTargetRectAnywhere
 	spTypeLine
 	spTypeSelf
 )

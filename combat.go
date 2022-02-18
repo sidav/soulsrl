@@ -1,7 +1,6 @@
 package main
 
 import (
-	"soulsrl/data"
 	"soulsrl/geometry"
 )
 
@@ -111,23 +110,6 @@ func (b *battlefield) getActionPresentAt(x, y int) *action {
 		}
 	}
 	return nil
-}
-
-func (b *battlefield) applyWeaponSkill(acting *mob, weaponSkill *data.WeaponSkill, tx, ty, tsize int) {
-	tickToOccur := b.currentTick + weaponSkill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
-	acting.nextTickToAct = tickToOccur
-	patternCoords := weaponSkill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
-	for _, coord := range patternCoords {
-		if !b.containsCoords(coord[0], coord[1]) {
-			continue
-		}
-		b.actions = append(b.actions, &action{
-			tickToOccur: tickToOccur,
-			owner:       acting,
-			x:           coord[0],
-			y:           coord[1],
-		})
-	}
 }
 
 func (b *battlefield) getListOfVectorsToPassableCoordsForMob(m *mob) [][]int {

@@ -60,12 +60,8 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 			}
 		}
 		if len(applicableAttacks) > 0 {
-			//mcx, mcy := m.getCentralCoord()
-			//amcx, amcy := anotherMob.getCentralCoord()
 			ap := applicableAttacks[rnd.Rand(len(applicableAttacks))]
-			//m.ai.dirX, m.ai.dirY = line.GetNextStepForLine(mcx, mcy, amcx, amcy)
 			b.applyWeaponSkill(m, ap, anotherMob.x, anotherMob.y, anotherMob.size)
-			//return true
 		}
 	}
 	return false

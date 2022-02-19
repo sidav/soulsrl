@@ -40,7 +40,7 @@ var mobsTable = map[string]mob{
 		name:      "Player",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}},
 		stats: &mobStats{
-			vitality:  10,
+			vitality:  100,
 			endurance: 10,
 			dexterity: 10,
 			strength:  10,

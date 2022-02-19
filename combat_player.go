@@ -15,14 +15,14 @@ func (b *battlefield) workPlayerInput() {
 	if key == " " {
 		b.player.nextTickToAct = b.currentTick + 1
 	}
-	dirx, diry := readKeyToVector(key)
-	if !(dirx == 0 && diry == 0) {
-		b.tryMoveMobByVector(b.player, dirx, diry)
+	moved := b.movePlayerOrDefaultHit(key)
+	if moved {
+		return
 	}
 
 	if '1' <= rune(key[0]) && rune(key[0]) <= '9' {
 		skillNumber, _ := strconv.Atoi(key)
-		skillNumber--  // because numeration is from 0 in code
+		skillNumber-- // because numeration is from 0 in code
 		if skillNumber < len(b.player.rightHand.AsWeapon.GetData().AttackPatterns) {
 			skill := b.player.rightHand.AsWeapon.GetData().AttackPatterns[skillNumber]
 			log.AppendMessagef("Using %s", skill.Pattern.Name)
@@ -57,6 +57,25 @@ func (b *battlefield) workPlayerInput() {
 	if key == "ENTER" {
 		b.player.nextTickToAct = b.currentTick + 100
 	}
+}
+
+func (b *battlefield) movePlayerOrDefaultHit(key string) bool {
+	dirx, diry := readKeyToVector(key)
+	if !(dirx == 0 && diry == 0) {
+		moved := b.tryMoveMobByVector(b.player, dirx, diry)
+		if moved {
+			return true
+		}
+
+		mobAtCoords := b.getMobPresentAt(b.player.x+b.player.size*dirx, b.player.y+b.player.size*diry)
+		if mobAtCoords != nil {
+			b.applyWeaponSkill(b.player, b.player.rightHand.AsWeapon,
+				b.player.rightHand.AsWeapon.GetData().AttackPatterns[0],
+				b.player.x+dirx*b.player.size, b.player.y+diry*b.player.size, b.player.size)
+			return true
+		}
+	}
+	return false
 }
 
 func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill, confirmButton string) (bool, int, int) {

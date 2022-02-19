@@ -19,8 +19,14 @@ func (b *battlefield) applyActions() {
 				log.AppendMessagef("%s hits %s (%d dmg)!", action.owner.name, mobAtCoords.name, action.damage)
 				mobAtCoords.hitpoints -= action.damage
 			}
+		}
+	}
+}
 
-			// remove actions
+func (b *battlefield) cleanupActions() {
+	for i := 0; i < len(b.actions); i++ {
+		shouldRemove := b.currentTick >= b.actions[i].tickToOccur || b.actions[i].owner.hitpoints <= 0
+		if shouldRemove {
 			b.actions[i] = b.actions[len(b.actions)-1]
 			b.actions = append(b.actions[:len(b.actions)-1])
 			i -= 1

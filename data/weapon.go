@@ -1,5 +1,7 @@
 package data
 
+import "github.com/sidav/sidavgorandom/fibrandom"
+
 type Weapon struct {
 	Code int
 }
@@ -8,9 +10,15 @@ func (w *Weapon) GetData() *weaponData {
 	return weaponsTable[w.Code]
 }
 
+func (w *Weapon) RollDamageDice(rnd *fibrandom.FibRandom) int {
+	data := w.GetData()
+	return rnd.RollDice(data.dnum, data.dval, data.dmod)
+}
+
 type WeaponSkill struct {
-	Pattern               *SkillPattern
-	DurationInTurnLengths int
+	Pattern                   *SkillPattern
+	DurationInTurnLengths     int
+	WeaponDamageAmountPercent int
 }
 
 func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
@@ -40,6 +48,7 @@ var weaponsTable = map[int]*weaponData{
 			{
 				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
 				DurationInTurnLengths: 10,
+				WeaponDamageAmountPercent: 100,
 			},
 		},
 	},
@@ -52,10 +61,12 @@ var weaponsTable = map[int]*weaponData{
 			{
 				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
 				DurationInTurnLengths: 10,
+				WeaponDamageAmountPercent: 100,
 			},
 			{
 				Pattern:               AttackPatternsTable[APATTERN_RIGHT_SLASH],
 				DurationInTurnLengths: 15,
+				WeaponDamageAmountPercent: 75,
 			},
 		},
 	},
@@ -68,10 +79,12 @@ var weaponsTable = map[int]*weaponData{
 			{
 				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
 				DurationInTurnLengths: 10,
+				WeaponDamageAmountPercent: 100,
 			},
 			{
 				Pattern:               AttackPatternsTable[APATTERN_SLASH],
 				DurationInTurnLengths: 25,
+				WeaponDamageAmountPercent: 50,
 			},
 		},
 	},
@@ -84,10 +97,12 @@ var weaponsTable = map[int]*weaponData{
 			{
 				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
 				DurationInTurnLengths: 10,
+				WeaponDamageAmountPercent: 100,
 			},
 			{
 				Pattern:               AttackPatternsTable[APATTERN_LUNGE],
 				DurationInTurnLengths: 25,
+				WeaponDamageAmountPercent: 150,
 			},
 		},
 	},

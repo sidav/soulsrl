@@ -78,7 +78,7 @@ func (b *battlefield) tryAttackAsMob(m *mob) bool {
 		}
 		if len(applicableAttacks) > 0 {
 			ap := applicableAttacks[rnd.Rand(len(applicableAttacks))]
-			b.applyWeaponSkill(m, ap, anotherMob.x, anotherMob.y, anotherMob.size)
+			b.applyWeaponSkill(m, m.rightHand.AsWeapon, ap, anotherMob.x, anotherMob.y, anotherMob.size)
 		}
 	}
 	return false

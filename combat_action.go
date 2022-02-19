@@ -3,6 +3,7 @@ package main
 type action struct {
 	x, y        int
 	tickToOccur int
+	damage      int
 	owner       *mob
 }
 
@@ -15,8 +16,8 @@ func (b *battlefield) applyActions() {
 				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {
 
 				mobAtCoords.wasAlreadyAffectedByActionBy = action.owner
-				log.AppendMessagef("%s hits %s!", action.owner.name, mobAtCoords.name)
-				mobAtCoords.hitpoints--
+				log.AppendMessagef("%s hits %s (%d dmg)!", action.owner.name, mobAtCoords.name, action.damage)
+				mobAtCoords.hitpoints -= action.damage
 			}
 
 			// remove actions

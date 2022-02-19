@@ -28,7 +28,8 @@ func (b *battlefield) workPlayerInput() {
 			log.AppendMessagef("Using %s", skill.Pattern.Name)
 			selected, x, y := b.selectHowToUseSkill(skill, key)
 			if selected {
-				b.applyWeaponSkill(b.player, skill, b.player.x+x*b.player.size, b.player.y+y*b.player.size, b.player.size)
+				b.applyWeaponSkill(b.player, b.player.rightHand.AsWeapon,
+					skill, b.player.x+x*b.player.size, b.player.y+y*b.player.size, b.player.size)
 			}
 		}
 	}

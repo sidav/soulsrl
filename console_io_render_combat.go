@@ -91,6 +91,9 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 		for j := 0; j < e.size; j++ {
 			c.setStyle(tcell.ColorDarkRed, tcell.ColorBlack)
 			c.setColorForActionIfPresentAt(x+i, y+j)
+			if e == b.player {
+				c.style = c.style.Foreground(tcell.ColorDarkGreen)
+			}
 			c.putUncoloredString(string(view[j][i]), x+i, y+j)
 		}
 	}

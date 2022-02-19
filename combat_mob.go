@@ -17,7 +17,11 @@ type mob struct {
 
 	name string
 
+	// weapons/shields/catalysts
 	rightHand *data.Item
+
+	//armor
+	body *data.Item
 
 	// temp vars
 	wasAlreadyAffectedByActionBy *mob
@@ -39,6 +43,7 @@ var mobsTable = map[string]mob{
 		size: 1,
 		name:      "Player",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  100,
 			endurance: 10,
@@ -50,6 +55,7 @@ var mobsTable = map[string]mob{
 		size: 3,
 		name:      "Giant",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  15,
 			endurance: 5,
@@ -61,6 +67,7 @@ var mobsTable = map[string]mob{
 		size: 2,
 		name:      "Undead Serpent",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  25,
 			endurance: 10,
@@ -72,6 +79,7 @@ var mobsTable = map[string]mob{
 		size: 1,
 		name:      "Undead Spearman",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  10,
 			endurance: 7,
@@ -83,6 +91,7 @@ var mobsTable = map[string]mob{
 		size: 1,
 		name:      "Undead Swordmaster",
 		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_HIGH_AC}},
 		stats: &mobStats{
 			vitality:  12,
 			endurance: 10,

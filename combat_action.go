@@ -6,7 +6,7 @@ type action struct {
 
 	toHitRoll, damageRoll int
 
-	owner       *mob
+	owner *mob
 }
 
 func (b *battlefield) applyActions() {
@@ -18,8 +18,7 @@ func (b *battlefield) applyActions() {
 				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {
 
 				mobAtCoords.wasAlreadyAffectedByActionBy = action.owner
-				log.AppendMessagef("%s hits %s (%d dmg)!", action.owner.name, mobAtCoords.name, action.damageRoll)
-				b.harmMob(action.toHitRoll, action.damageRoll, mobAtCoords)
+				b.harmMob(action.owner, action.toHitRoll, action.damageRoll, mobAtCoords)
 			}
 		}
 	}
@@ -37,14 +36,21 @@ func (b *battlefield) cleanupActions() {
 	}
 }
 
-func (b *battlefield) harmMob(toHit, dmg int, target *mob) {
+func (b *battlefield) harmMob(attacker *mob, toHit, dmg int, target *mob) {
 	targetArmorClass := 0
 	targetDamageReduction := 0
+	if target.body != nil {
+		targetArmorClass = target.body.AsArmor.GetData().ArmorClass
+		targetDamageReduction = target.body.AsArmor.GetData().DamageReduction
+	}
 	if toHit > targetArmorClass {
 		dmg -= targetDamageReduction
 		if dmg < 1 {
 			dmg = 1
 		}
 		target.hitpoints -= dmg
+		log.AppendMessagef("%s hits %s (%d dmg)!", attacker.name, target.name, dmg)
+	} else {
+		log.AppendMessagef("%s misses %s!", attacker.name, target.name)
 	}
 }

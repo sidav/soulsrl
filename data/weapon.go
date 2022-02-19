@@ -48,7 +48,7 @@ const (
 var weaponsTable = map[int]*weaponData{
 	WEAPON_BROKENSWORD: {
 		Name:     "Broken Sword",
-		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		toHitNum: 1, toHitVal: 6, toHitMod: 2,
 		dnum: 1, dval: 3, dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
@@ -61,7 +61,7 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_SHORTSWORD: {
 		Name:     "Short Sword",
-		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		toHitNum: 2, toHitVal: 6, toHitMod: 0,
 		dnum: 2, dval: 6, dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
@@ -80,7 +80,7 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_LONGSWORD: {
 		Name:     "Long Sword",
-		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		toHitNum: 2, toHitVal: 6, toHitMod: 0,
 		dnum: 2, dval: 6, dmod: 2,
 		AttackPatterns: []*WeaponSkill{
 			{
@@ -99,7 +99,7 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_SPEAR: {
 		Name:     "Spear",
-		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		toHitNum: 2, toHitVal: 6, toHitMod: 0,
 		dnum: 1, dval: 6, dmod: 3,
 		AttackPatterns: []*WeaponSkill{
 			{

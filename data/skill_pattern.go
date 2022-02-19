@@ -58,7 +58,7 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 		found, x, y := geometry.FindCoordsForNeighbouringSquareOfSameSizeContainingCoords(actorX, actorY, actorSize,
 			coverX, coverY)
 		if !found {
-			panic("Not found... Y  U NO FOUND?")
+			panic("Not found... Y U NO FOUND?")
 		}
 		return geometry.RectToCoords(x, y, actorSize, actorSize)
 	case spTypeRelativeCoordinates:

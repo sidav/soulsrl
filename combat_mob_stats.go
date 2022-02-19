@@ -8,7 +8,7 @@ type mobStats struct {
 }
 
 func (m *mob) getMaxHitpoints() int {
-	return m.stats.dexterity
+	return m.stats.vitality
 }
 
 func (m *mob) getMaxStamina() int {

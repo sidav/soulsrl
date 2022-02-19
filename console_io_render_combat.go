@@ -105,8 +105,8 @@ func (c *consoleIO) renderMobAtCoords(b *battlefield, e *mob, x, y int) {
 
 func (c *consoleIO) renderBattlefieldUI(b *battlefield, xcoord int) {
 	c.putUncoloredString(fmt.Sprintf("TICK: %d", b.currentTick), xcoord, 0)
-	c.putUncoloredString(fmt.Sprintf("LIFE: %d/%d", b.player.hitpoints, 10), xcoord, 1)
-	c.putUncoloredString(fmt.Sprintf("STMN: %d/%d", b.player.stamina, 10), xcoord, 2)
+	c.putUncoloredString(fmt.Sprintf("LIFE: %d/%d", b.player.hitpoints, b.player.getMaxStamina()), xcoord, 1)
+	c.putUncoloredString(fmt.Sprintf("STMN: %d/%d", b.player.stamina, b.player.getMaxStamina()), xcoord, 2)
 	c.putUncoloredString(fmt.Sprintf("STNC: STEADY"), xcoord, 2)
 	currLine := 4
 	for i, ap := range b.player.rightHand.AsWeapon.GetData().AttackPatterns {
@@ -118,7 +118,8 @@ func (c *consoleIO) renderBattlefieldUI(b *battlefield, xcoord int) {
 		if mob == b.player {
 			continue
 		}
-		c.putUncoloredString(fmt.Sprintf("%s: hp %d/%d stm %d/%d", mob.name, mob.hitpoints, 10, mob.stamina, 10),
+		c.putUncoloredString(fmt.Sprintf("%s: hp %d/%d stm %d/%d", mob.name, mob.hitpoints, mob.getMaxHitpoints(),
+			mob.stamina, mob.getMaxStamina()),
 			xcoord, currLine)
 		currLine++
 	}

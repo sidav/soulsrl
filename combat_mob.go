@@ -13,6 +13,7 @@ type mob struct {
 	nextTickToAct int
 
 	hitpoints, stamina int
+	stats              *mobStats
 
 	name string
 
@@ -33,27 +34,71 @@ func (m *mob) containsCoords(x, y int) bool {
 	return geometry.SquareContainsCoords(m.x, m.y, m.size, x, y)
 }
 
+var mobsTable = map[string]mob{
+	"player": {
+		size: 1,
+		name:      "Player",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}},
+		stats: &mobStats{
+			vitality:  10,
+			endurance: 10,
+			dexterity: 10,
+			strength:  10,
+		},
+	},
+	"giant": {
+		size: 3,
+		name:      "Giant",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		stats: &mobStats{
+			vitality:  15,
+			endurance: 5,
+			dexterity: 5,
+			strength:  15,
+		},
+	},
+	"beast": {
+		size: 2,
+		name:      "Undead Serpent",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		stats: &mobStats{
+			vitality:  25,
+			endurance: 10,
+			dexterity: 25,
+			strength:  5,
+		},
+	},
+	"spearman": {
+		size: 1,
+		name:      "Undead Spearman",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}},
+		stats: &mobStats{
+			vitality:  10,
+			endurance: 7,
+			dexterity: 7,
+			strength:  7,
+		},
+	},
+	"swordmaster": {
+		size: 1,
+		name:      "Undead Swordmaster",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}},
+		stats: &mobStats{
+			vitality:  12,
+			endurance: 10,
+			dexterity: 5,
+			strength:  7,
+		},
+	},
+}
+
 func newMob(name string) *mob {
-	u := &mob{
-		name: name,
+	code := strings.ToLower(name)
+	mob := mobsTable[code]
+	if code != "player" {
+		mob.ai = initDefaultAi()
 	}
-	switch strings.ToLower(name) {
-	case "player":
-		u.size = 1
-		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}}
-		return u
-	case "giant":
-		u.size = 3
-		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
-	case "beast":
-		u.size = 2
-		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}}
-	case "swordmaster":
-		u.size = 1
-		u.rightHand = &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SHORTSWORD}}
-	default:
-		panic("No such mob!")
-	}
-	u.ai = initDefaultAi()
-	return u
+	mob.hitpoints = mob.getMaxHitpoints()
+	mob.stamina = mob.getMaxStamina()
+	return &mob
 }

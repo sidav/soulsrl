@@ -22,7 +22,7 @@ func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.ai.dirX, m.y+m.ai.dirY
 	if m.ai.dirX == 0 && m.ai.dirY == 0 || !b.containsCoords(newx, newy) || rnd.PercentChance(m.ai.changeDirPercent) {
 		if b.tryRotateToEnemy(m) {
-			return 
+			return
 		}
 		coordsList := b.getListOfVectorsToPassableCoordsForMob(m)
 		if len(coordsList) > 0 {

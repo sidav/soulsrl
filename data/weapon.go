@@ -10,6 +10,11 @@ func (w *Weapon) GetData() *weaponData {
 	return weaponsTable[w.Code]
 }
 
+func (w *Weapon) RollToHitDice(rnd *fibrandom.FibRandom) int {
+	data := w.GetData()
+	return rnd.RollDice(data.toHitNum, data.toHitVal, data.toHitMod)
+}
+
 func (w *Weapon) RollDamageDice(rnd *fibrandom.FibRandom) int {
 	data := w.GetData()
 	return rnd.RollDice(data.dnum, data.dval, data.dmod)
@@ -27,9 +32,10 @@ func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
 }
 
 type weaponData struct {
-	Name             string
-	dnum, dval, dmod int
-	AttackPatterns   []*WeaponSkill
+	Name                         string
+	dnum, dval, dmod             int
+	toHitNum, toHitVal, toHitMod int
+	AttackPatterns               []*WeaponSkill
 }
 
 const (
@@ -41,10 +47,9 @@ const (
 
 var weaponsTable = map[int]*weaponData{
 	WEAPON_BROKENSWORD: {
-		Name: "Broken Sword",
-		dnum: 1,
-		dval: 3,
-		dmod: 0,
+		Name:     "Broken Sword",
+		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		dnum: 1, dval: 3, dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -55,10 +60,9 @@ var weaponsTable = map[int]*weaponData{
 		},
 	},
 	WEAPON_SHORTSWORD: {
-		Name: "Short Sword",
-		dnum: 2,
-		dval: 6,
-		dmod: 0,
+		Name:     "Short Sword",
+		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		dnum: 2, dval: 6, dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -75,10 +79,9 @@ var weaponsTable = map[int]*weaponData{
 		},
 	},
 	WEAPON_LONGSWORD: {
-		Name: "Long Sword",
-		dnum: 2,
-		dval: 6,
-		dmod: 2,
+		Name:     "Long Sword",
+		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		dnum: 2, dval: 6, dmod: 2,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -95,10 +98,9 @@ var weaponsTable = map[int]*weaponData{
 		},
 	},
 	WEAPON_SPEAR: {
-		Name: "Spear",
-		dnum: 1,
-		dval: 6,
-		dmod: 3,
+		Name:     "Spear",
+		toHitNum: 1, toHitVal: 6, toHitMod: 0,
+		dnum: 1, dval: 6, dmod: 3,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],

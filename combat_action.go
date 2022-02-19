@@ -3,7 +3,9 @@ package main
 type action struct {
 	x, y        int
 	tickToOccur int
-	damage      int
+
+	toHitRoll, damageRoll int
+
 	owner       *mob
 }
 
@@ -16,8 +18,8 @@ func (b *battlefield) applyActions() {
 				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {
 
 				mobAtCoords.wasAlreadyAffectedByActionBy = action.owner
-				log.AppendMessagef("%s hits %s (%d dmg)!", action.owner.name, mobAtCoords.name, action.damage)
-				mobAtCoords.hitpoints -= action.damage
+				log.AppendMessagef("%s hits %s (%d dmg)!", action.owner.name, mobAtCoords.name, action.damageRoll)
+				b.harmMob(action.toHitRoll, action.damageRoll, mobAtCoords)
 			}
 		}
 	}
@@ -32,5 +34,17 @@ func (b *battlefield) cleanupActions() {
 			i -= 1
 			continue
 		}
+	}
+}
+
+func (b *battlefield) harmMob(toHit, dmg int, target *mob) {
+	targetArmorClass := 0
+	targetDamageReduction := 0
+	if toHit > targetArmorClass {
+		dmg -= targetDamageReduction
+		if dmg < 1 {
+			dmg = 1
+		}
+		target.hitpoints -= dmg
 	}
 }

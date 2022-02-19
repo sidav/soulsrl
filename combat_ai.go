@@ -21,6 +21,9 @@ func initDefaultAi() *mobAi {
 func (b *battlefield) actAsMob(m *mob) {
 	newx, newy := m.x+m.ai.dirX, m.y+m.ai.dirY
 	if m.ai.dirX == 0 && m.ai.dirY == 0 || !b.containsCoords(newx, newy) || rnd.PercentChance(m.ai.changeDirPercent) {
+		if b.tryRotateToEnemy(m) {
+			return 
+		}
 		coordsList := b.getListOfVectorsToPassableCoordsForMob(m)
 		if len(coordsList) > 0 {
 			selected := coordsList[rnd.Rand(len(coordsList))]
@@ -44,6 +47,20 @@ func (b *battlefield) actAsMob(m *mob) {
 			}
 		}
 	}
+}
+
+func (b *battlefield) tryRotateToEnemy(m *mob) bool {
+	for _, anotherMob := range b.mobs {
+		if anotherMob == m {
+			continue
+		}
+		vx, vy := b.getVectorForVisibleFromMobToMobIfExists(m, anotherMob)
+		if vx != 0 || vy != 0 {
+			m.ai.dirX, m.ai.dirY = vx, vy
+			return true
+		}
+	}
+	return false
 }
 
 func (b *battlefield) tryAttackAsMob(m *mob) bool {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"soulsrl/geometry"
+	"soulsrl/geometry/line"
 )
 
 const (
@@ -61,6 +62,18 @@ func (b *battlefield) addMobAtRandomEmptyPlace(m *mob) {
 		m.y = goodCoords[ind][1]
 		b.mobs = append(b.mobs, m)
 	}
+}
+
+func (b *battlefield) getVectorForVisibleFromMobToMobIfExists(from, to *mob) (int, int) {
+	fx, fy := from.getCentralCoord()
+	tx, ty := to.getCentralCoord()
+	lineToCheck := line.GetLine(fx, fy, tx, ty)
+	for _, l := range lineToCheck {
+		if b.tiles[l.X][l.Y] == TILE_WALL {
+			return 0, 0
+		}
+	}
+	return lineToCheck[1].X-lineToCheck[0].X, lineToCheck[1].Y - lineToCheck[0].Y
 }
 
 func (b *battlefield) containsCoords(x, y int) bool {

@@ -136,7 +136,7 @@ func (c *consoleIO) makeActionsMap(b *battlefield) {
 			if a.tickToOccur - b.currentTick > TICKS_IN_COMBAT_TURN {
 				number = 2
 			}
-			if a.tickToOccur == b.currentTick {
+			if a.tickToOccur - b.currentTick <= TICKS_IN_COMBAT_TURN {
 				number = 1
 			}
 			actsmap[a.x][a.y] = number

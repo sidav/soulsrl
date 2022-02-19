@@ -16,8 +16,13 @@ func (b *battlefield) willWeaponSkillReachSquare(acting *mob, skill data.WeaponS
 }
 
 func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *data.WeaponSkill, tx, ty, tsize int) {
+	if acting.stamina < skill.StaminaCost {
+		return
+	}
 	tickToOccur := b.currentTick + skill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	acting.nextTickToAct = tickToOccur
+	acting.stamina -= skill.StaminaCost
+
 	patternCoords := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
 	damageRoll := weapon.RollDamageDice(rnd)
 	damageRoll = skill.WeaponDamageAmountPercent * damageRoll / 100

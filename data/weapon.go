@@ -19,6 +19,7 @@ type WeaponSkill struct {
 	Pattern                   *SkillPattern
 	DurationInTurnLengths     int
 	WeaponDamageAmountPercent int
+	StaminaCost               int
 }
 
 func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
@@ -46,9 +47,10 @@ var weaponsTable = map[int]*weaponData{
 		dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
-				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
-				DurationInTurnLengths: 10,
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     10,
 				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
 			},
 		},
 	},
@@ -59,14 +61,16 @@ var weaponsTable = map[int]*weaponData{
 		dmod: 0,
 		AttackPatterns: []*WeaponSkill{
 			{
-				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
-				DurationInTurnLengths: 10,
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     10,
 				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
 			},
 			{
-				Pattern:               AttackPatternsTable[APATTERN_RIGHT_SLASH],
-				DurationInTurnLengths: 15,
+				Pattern:                   AttackPatternsTable[APATTERN_RIGHT_SLASH],
+				DurationInTurnLengths:     15,
 				WeaponDamageAmountPercent: 75,
+				StaminaCost:               2,
 			},
 		},
 	},
@@ -77,14 +81,16 @@ var weaponsTable = map[int]*weaponData{
 		dmod: 2,
 		AttackPatterns: []*WeaponSkill{
 			{
-				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
-				DurationInTurnLengths: 10,
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     10,
 				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
 			},
 			{
-				Pattern:               AttackPatternsTable[APATTERN_SLASH],
-				DurationInTurnLengths: 25,
+				Pattern:                   AttackPatternsTable[APATTERN_SLASH],
+				DurationInTurnLengths:     25,
 				WeaponDamageAmountPercent: 50,
+				StaminaCost:               3,
 			},
 		},
 	},
@@ -95,14 +101,16 @@ var weaponsTable = map[int]*weaponData{
 		dmod: 3,
 		AttackPatterns: []*WeaponSkill{
 			{
-				Pattern:               AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
-				DurationInTurnLengths: 10,
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     10,
 				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
 			},
 			{
-				Pattern:               AttackPatternsTable[APATTERN_LUNGE],
-				DurationInTurnLengths: 25,
+				Pattern:                   AttackPatternsTable[APATTERN_LUNGE],
+				DurationInTurnLengths:     25,
 				WeaponDamageAmountPercent: 150,
+				StaminaCost:               2,
 			},
 		},
 	},

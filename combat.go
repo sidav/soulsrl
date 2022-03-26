@@ -150,3 +150,23 @@ func (b *battlefield) tryMoveMobByVector(m *mob, vx, vy int) bool {
 	}
 	return false
 }
+
+func (b *battlefield) tryRollMobByVector(m *mob, vx, vy int) bool {
+	rolled := false
+	if m.stamina < 3 {
+		return false
+	}
+	for i := 1; i <= 2; i++ {
+		mobAtCoords := b.getMobInSquareOtherThan(m.x+vx, m.y+vy, m.size, m)
+		if  mobAtCoords == nil && b.areAllTilesInRectPassable(m.x+vx, m.y+vy, m.size) {
+			m.x += vx
+			m.y += vy
+			rolled = true
+		}
+	}
+	if rolled {
+		m.stamina -= 3
+		m.nextTickToAct = b.currentTick + TICKS_IN_COMBAT_TURN
+	}
+	return rolled
+}

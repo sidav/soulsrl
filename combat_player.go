@@ -19,6 +19,16 @@ func (b *battlefield) workPlayerInput() {
 	if moved {
 		return
 	}
+	if key == "v" {
+		selected, x, y := b.selectDirection("Select dodge direction")
+		if selected {
+			rolled := b.tryRollMobByVector(b.player, x, y)
+			if !rolled {
+				log.AppendMessagef("Can't dodge!")
+				return
+			}
+		}
+	}
 
 	if '1' <= rune(key[0]) && rune(key[0]) <= '9' {
 		skillNumber, _ := strconv.Atoi(key)
@@ -76,6 +86,25 @@ func (b *battlefield) movePlayerOrDefaultHit(key string) bool {
 		}
 	}
 	return false
+}
+
+func (b *battlefield) selectDirection(text string) (bool, int, int) {
+	log.AppendMessagef(text)
+	io.renderBattlefield(b, [][]int{})
+	x, y := 0, 0
+	selected := false
+	for !selected {
+		key := io.readKey()
+		if key == "ESCAPE" {
+			break
+		}
+		x, y = readKeyToVector(key)
+		if x != 0 || y != 0 {
+			selected = true
+			break
+		}
+	}
+	return selected, x, y
 }
 
 func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill, confirmButton string) (bool, int, int) {

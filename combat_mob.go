@@ -54,7 +54,7 @@ var mobsTable = map[string]mob{
 	"giant": {
 		size: 3,
 		name:      "Giant",
-		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_GIANTS_LONGSWORD}},
 		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  15,
@@ -66,7 +66,7 @@ var mobsTable = map[string]mob{
 	"beast": {
 		size: 2,
 		name:      "Undead Serpent",
-		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_LONGSWORD}},
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_GIANTS_LONGSWORD}},
 		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  25,

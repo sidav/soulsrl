@@ -42,6 +42,7 @@ const (
 	WEAPON_BROKENSWORD = iota
 	WEAPON_SHORTSWORD
 	WEAPON_LONGSWORD
+	WEAPON_GIANTS_LONGSWORD
 	WEAPON_SPEAR
 )
 
@@ -92,6 +93,25 @@ var weaponsTable = map[int]*weaponData{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SLASH],
 				DurationInTurnLengths:     25,
+				WeaponDamageAmountPercent: 50,
+				StaminaCost:               3,
+			},
+		},
+	},
+	WEAPON_GIANTS_LONGSWORD: {
+		Name:     "Giant Long Sword",
+		toHitNum: 2, toHitVal: 6, toHitMod: 0,
+		dnum: 2, dval: 6, dmod: 2,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     15,
+				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
+			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_SLASH],
+				DurationInTurnLengths:     35,
 				WeaponDamageAmountPercent: 50,
 				StaminaCost:               3,
 			},

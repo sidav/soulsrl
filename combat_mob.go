@@ -42,7 +42,7 @@ var mobsTable = map[string]mob{
 	"player": {
 		size: 1,
 		name:      "Player",
-		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_SPEAR}},
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_RAPIER}},
 		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
 		stats: &mobStats{
 			vitality:  100,

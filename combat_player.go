@@ -129,7 +129,7 @@ func (b *battlefield) selectHowToUseSkill(ws *data.WeaponSkill, confirmButton st
 		x, y = readKeyToVector(key)
 		var potentialCoords [][]int
 		if x != 0 || y != 0 {
-			potentialCoords = ws.Pattern.GetListOfCoordsWhenAppliedAtRect(b.player.x, b.player.y, b.player.size,
+			potentialCoords, _ = ws.Pattern.GetListOfCoordsWhenAppliedAtRect(b.player.x, b.player.y, b.player.size,
 				b.player.x+x*b.player.size, b.player.y+y*b.player.size, b.player.size)
 			//for i := range potentialCoords {
 			//	potentialCoords[i][0] += b.player.x

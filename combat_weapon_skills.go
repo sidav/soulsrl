@@ -2,7 +2,6 @@ package main
 
 import (
 	"soulsrl/data"
-	"soulsrl/geometry"
 )
 
 //func (b *battlefield) willWeaponSkillReachSquare(acting *mob, skill data.WeaponSkill, tx, ty, tsize int) bool {
@@ -22,11 +21,11 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *
 	tickToOccur := b.currentTick + skill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	acting.nextTickToAct = tickToOccur
 	if skill.IsInstant {
-		tickToOccur = b.currentTick+1 // it's for action occurrence, as mob delay is already set.
+		tickToOccur = b.currentTick + 1 // it's for action occurrence, as mob delay is already set.
 	}
 	acting.stamina -= skill.StaminaCost
 
-	patternCoords := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
+	patternCoords, moveVectors := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
 	toHitRoll := weapon.RollToHitDice(rnd)
 	damageRoll := weapon.RollDamageDice(rnd)
 	damageRoll = skill.WeaponDamageAmountPercent * damageRoll / 100
@@ -43,22 +42,14 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *
 			y:           coord[1],
 		})
 	}
-	if skill.HasMoveTo {
-		// calculate movement vector
-		vx, vy := (tx+tsize/2)-acting.x, (ty+tsize/2)-acting.y
-		if vx != 0 {
-			vx /= geometry.Abs(vx)
-		}
-		if vy != 0 {
-			vy /= geometry.Abs(vy)
-		}
-		for i := 0; i < acting.size; i++ {
-			b.actions = append(b.actions, &action{
-				actionType:  ACTIONTYPE_MOVE,
-				tickToOccur: tickToOccur,
-				owner:       acting,
-				vx:          vx, vy: vy,
-			})
-		}
+	for _, vect := range moveVectors {
+		b.actions = append(b.actions, &action{
+			vx:          vect[0],
+			vy:          vect[1],
+			tickToOccur: tickToOccur,
+			actionType:  ACTIONTYPE_MOVE,
+			hidden:      true,
+			owner:       acting,
+		})
 	}
 }

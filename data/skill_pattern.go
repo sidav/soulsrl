@@ -16,23 +16,29 @@ const ( // how exactly skill coords will be determined
 type SkillPattern struct {
 	patternApplicationType int
 	Name                   string
-	RelativeCoords         [][]int
+	AttackRelativeCoords   [][]int
+	MovementRelativeCoords [][]int
 
 	// for helping ai calculations, used ONLY in them
 	ReachInUnitSizes int
 }
 
-func (sp *SkillPattern) GetRelativeCoordsByVector(vx, vy int) [][]int {
+type PatternMovementVector struct {
+	Vx, Vy int
+	JumpOver bool
+}
+
+func getRelativeCoordsByVector(coordsFacingRight [][]int, vx, vy int) [][]int {
 	var coords [][]int
-	for _, coord := range sp.RelativeCoords {
+	for _, coord := range coordsFacingRight {
 		rotatedX, rotatedY := geometry.GetVectorRotatedLikeVector(coord[0], coord[1], vx, vy)
 		coords = append(coords, []int{rotatedX, rotatedY})
 	}
 	return coords
 }
 
-func (sp *SkillPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]int {
-	rotatedCoords := sp.GetRelativeCoordsByVector(vx, vy)
+func getScaledRelativeCoordsByVector(coordsFacingRight [][]int, vx, vy, size int) [][]int {
+	rotatedCoords := getRelativeCoordsByVector(coordsFacingRight, vx, vy)
 	var coords [][]int
 	for _, coord := range rotatedCoords {
 		squareForThis := geometry.MoveSquareByVector(coord[0], coord[1], 0, 0, size)
@@ -43,14 +49,15 @@ func (sp *SkillPattern) getScaledRelativeCoordsByVector(vx, vy, size int) [][]in
 	return coords
 }
 
-func (sp *SkillPattern) GetListOfCoordsWhenApplied(actorSize, vx, vy int) [][]int {
-	return sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+func (sp *SkillPattern) getListOfCoordsWhenApplied(actorSize, vx, vy int) [][]int {
+	return getScaledRelativeCoordsByVector(sp.AttackRelativeCoords, vx, vy, actorSize)
 }
 
-func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSize, targetX, targetY, targetSize int) [][]int {
+func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSize, targetX, targetY, targetSize int) ([][]int, [][]int) {
 	actorCenterX, actorCenterY := actorX+actorSize/2, actorY+actorSize/2
 	targetCenterX, targetCenterY := targetX+targetSize/2, targetY+targetSize/2
 	vx, vy := line.GetNextStepForLine(actorCenterX, actorCenterY, targetCenterX, targetCenterY)
+	var attackCoords[][]int
 	switch sp.patternApplicationType {
 	case spTypeNearbyRect:
 		coverX, coverY := geometry.GetCoordsOfClosestCoordToRectFromRect(actorX, actorY, actorSize, actorSize,
@@ -60,20 +67,33 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 		if !found {
 			panic("Not found... Y U NO FOUND?")
 		}
-		return geometry.RectToCoords(x, y, actorSize, actorSize)
+		attackCoords = geometry.RectToCoords(x, y, actorSize, actorSize)
 	case spTypeRelativeCoordinates:
-		coords := sp.getScaledRelativeCoordsByVector(vx, vy, actorSize)
+		coords := getScaledRelativeCoordsByVector(sp.AttackRelativeCoords, vx, vy, actorSize)
 		for _, c := range coords {
 			c[0] += actorX
 			c[1] += actorY
 		}
-		return coords
+		attackCoords = coords
+	default:
+		panic("Y U NO IMPLEMENT")
 	}
-	panic ("Y U NO IMPLEMENT")
+	// now collect movement VECTORS (not coordinates)
+	moveVectors := make([][]int, 0)
+	if len(sp.MovementRelativeCoords) > 0 {
+		movCoords := getRelativeCoordsByVector(sp.MovementRelativeCoords, vx, vy)
+		moveLength := actorSize
+		for i := 0; i < moveLength; i++ {
+			moveVectors = append(moveVectors, movCoords[0])
+		}
+	}
+	return attackCoords, moveVectors
 }
 
 const (
 	APATTERN_SIMPLE_STRIKE = iota
+
+	APATTERN_STRIKE_STEP_BACK
 
 	APATTERN_RIGHT_SLASH
 	APATTERN_SLASH
@@ -88,16 +108,27 @@ const (
 var AttackPatternsTable = map[int]*SkillPattern{
 	APATTERN_SIMPLE_STRIKE: {
 		patternApplicationType: spTypeNearbyRect,
-		Name: "Strike",
-		RelativeCoords: [][]int{
+		Name:                   "Strike",
+		AttackRelativeCoords: [][]int{
 			{1, 0},
+		},
+		ReachInUnitSizes: 1,
+	},
+	APATTERN_STRIKE_STEP_BACK: {
+		patternApplicationType: spTypeNearbyRect,
+		Name:                   "Strike and step back",
+		AttackRelativeCoords: [][]int{
+			{1, 0},
+		},
+		MovementRelativeCoords: [][]int{
+			{-1, 0},
 		},
 		ReachInUnitSizes: 1,
 	},
 	APATTERN_RIGHT_SLASH: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Right Slash",
-		RelativeCoords: [][]int{
+		Name:                   "Right Slash",
+		AttackRelativeCoords: [][]int{
 			{1, 0},
 			{1, 1},
 		},
@@ -105,8 +136,8 @@ var AttackPatternsTable = map[int]*SkillPattern{
 	},
 	APATTERN_SLASH: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Full Slash",
-		RelativeCoords: [][]int{
+		Name:                   "Full Slash",
+		AttackRelativeCoords: [][]int{
 			{1, -1},
 			{1, 0},
 			{1, 1},
@@ -115,8 +146,8 @@ var AttackPatternsTable = map[int]*SkillPattern{
 	},
 	APATTERN_BIG_SLASH: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Big Slash",
-		RelativeCoords: [][]int{
+		Name:                   "Big Slash",
+		AttackRelativeCoords: [][]int{
 			{0, -1},
 			{1, -1},
 			{1, 0},
@@ -127,8 +158,8 @@ var AttackPatternsTable = map[int]*SkillPattern{
 	},
 	APATTERN_LUNGE: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Lunge",
-		RelativeCoords: [][]int{
+		Name:                   "Lunge",
+		AttackRelativeCoords: [][]int{
 			{1, 0},
 			{2, 0},
 		},
@@ -136,16 +167,19 @@ var AttackPatternsTable = map[int]*SkillPattern{
 	},
 	APATTERN_JUMP_LUNGE: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Jump Lunge",
-		RelativeCoords: [][]int{
+		Name:                   "Jump Lunge",
+		AttackRelativeCoords: [][]int{
 			{2, 0},
+		},
+		MovementRelativeCoords: [][]int{
+			{1, 0},
 		},
 		ReachInUnitSizes: 2,
 	},
 	APATTERN_TWO_SIDES: {
 		patternApplicationType: spTypeRelativeCoordinates,
-		Name: "Two-side strike",
-		RelativeCoords: [][]int{
+		Name:                   "Two-side strike",
+		AttackRelativeCoords: [][]int{
 			{1, 0},
 			{-1, 0},
 		},

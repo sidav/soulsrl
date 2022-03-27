@@ -26,8 +26,6 @@ type WeaponSkill struct {
 	WeaponDamageAmountPercent int
 	StaminaCost               int
 	IsInstant                 bool
-	HasJumpOver               bool
-	HasMoveTo                 bool
 }
 
 func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
@@ -43,6 +41,7 @@ type weaponData struct {
 
 const (
 	WEAPON_BROKENSWORD = iota
+	WEAPON_RAPIER
 	WEAPON_SHORTSWORD
 	WEAPON_LONGSWORD
 	WEAPON_GIANTS_LONGSWORD
@@ -60,6 +59,25 @@ var weaponsTable = map[int]*weaponData{
 				DurationInTurnLengths:     10,
 				WeaponDamageAmountPercent: 100,
 				StaminaCost:               1,
+			},
+		},
+	},
+	WEAPON_RAPIER: {
+		Name:     "Rapier",
+		toHitNum: 2, toHitVal: 6, toHitMod: 0,
+		dnum: 2, dval: 6, dmod: 0,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
+				DurationInTurnLengths:     10,
+				WeaponDamageAmountPercent: 100,
+				StaminaCost:               1,
+			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_STRIKE_STEP_BACK],
+				DurationInTurnLengths:     15,
+				WeaponDamageAmountPercent: 75,
+				StaminaCost:               2,
 			},
 		},
 	},
@@ -141,7 +159,6 @@ var weaponsTable = map[int]*weaponData{
 				Pattern:                   AttackPatternsTable[APATTERN_JUMP_LUNGE],
 				DurationInTurnLengths:     10,
 				IsInstant:                 true,
-				HasMoveTo:                 true,
 				WeaponDamageAmountPercent: 150,
 				StaminaCost:               5,
 			},

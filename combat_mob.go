@@ -51,6 +51,18 @@ var mobsTable = map[string]mob{
 			strength:  10,
 		},
 	},
+	"debug": {
+		size: 1,
+		name:      "Knight of Holy Debug",
+		rightHand: &data.Item{AsWeapon: &data.Weapon{Code: data.WEAPON_DEBUGGER}},
+		body: &data.Item{AsArmor: &data.Armor{Code: data.ARMOR_LEATHER}},
+		stats: &mobStats{
+			vitality:  50,
+			endurance: 20,
+			dexterity: 10,
+			strength:  10,
+		},
+	},
 	"giant": {
 		size: 3,
 		name:      "Giant",

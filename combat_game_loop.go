@@ -40,7 +40,7 @@ func (b *battlefield) LoopThroughMobs() {
 			i--
 			continue
 		}
-		if b.currentTick % (TICKS_IN_COMBAT_TURN * 2) == 0 && mob.nextTickToAct <= b.currentTick {
+		if b.currentTick % (TICKS_IN_COMBAT_TURN * 2) == 0 {
 			mob.stamina++
 			if mob.stamina > mob.getMaxStamina() {
 				mob.stamina = mob.getMaxStamina()

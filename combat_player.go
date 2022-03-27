@@ -49,12 +49,12 @@ func (b *battlefield) workPlayerInput() {
 		b.addMobAtRandomEmptyPlace(b.player)
 		log.AppendMessage("Player dropped.")
 	}
-	if key == "u" {
+	if key == "m" {
 		p := newMob("giant")
 		log.AppendMessage("Big mob dropped")
 		b.addMobAtRandomEmptyPlace(p)
 	}
-	if key == "i" {
+	if key == "l" {
 		p := newMob("beast")
 		log.AppendMessage("Medium mob dropped")
 		b.addMobAtRandomEmptyPlace(p)
@@ -64,9 +64,14 @@ func (b *battlefield) workPlayerInput() {
 		log.AppendMessage("Small mob dropped.")
 		b.addMobAtRandomEmptyPlace(p)
 	}
-	if key == "l" {
+	if key == "i" {
 		p := newMob("spearman")
 		log.AppendMessage("Small mob dropped.")
+		b.addMobAtRandomEmptyPlace(p)
+	}
+	if key == "u" {
+		p := newMob("debug")
+		log.AppendMessage("Debug mob dropped.")
 		b.addMobAtRandomEmptyPlace(p)
 	}
 	if key == "ENTER" {

@@ -18,7 +18,7 @@ type SkillPattern struct {
 	Name                   string
 	RelativeCoords         [][]int
 
-	// for helping ai calculations
+	// for helping ai calculations, used ONLY in them
 	ReachInUnitSizes int
 }
 
@@ -74,10 +74,14 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 
 const (
 	APATTERN_SIMPLE_STRIKE = iota
+
 	APATTERN_RIGHT_SLASH
 	APATTERN_SLASH
 	APATTERN_BIG_SLASH
+
 	APATTERN_LUNGE
+	APATTERN_JUMP_LUNGE
+
 	APATTERN_TWO_SIDES
 )
 
@@ -126,6 +130,14 @@ var AttackPatternsTable = map[int]*SkillPattern{
 		Name: "Lunge",
 		RelativeCoords: [][]int{
 			{1, 0},
+			{2, 0},
+		},
+		ReachInUnitSizes: 2,
+	},
+	APATTERN_JUMP_LUNGE: {
+		patternApplicationType: spTypeRelativeCoordinates,
+		Name: "Jump Lunge",
+		RelativeCoords: [][]int{
 			{2, 0},
 		},
 		ReachInUnitSizes: 2,

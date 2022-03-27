@@ -1,8 +1,14 @@
 package main
 
+const (
+	ACTIONTYPE_ATTACK = iota
+	ACTIONTYPE_MOVE
+)
+
 type action struct {
 	x, y        int
 	tickToOccur int
+	actionType  int
 
 	toHitRoll, damageRoll int
 

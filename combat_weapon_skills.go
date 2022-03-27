@@ -2,18 +2,17 @@ package main
 
 import (
 	"soulsrl/data"
-	"soulsrl/geometry"
 )
 
-func (b *battlefield) willWeaponSkillReachSquare(acting *mob, skill data.WeaponSkill, tx, ty, tsize int) bool {
-	patternCoords := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
-	for _, c := range patternCoords {
-		if geometry.RectContainsCoords(tx, ty, tsize, tsize, c[0], c[1]) {
-			return true
-		}
-	}
-	return false
-}
+//func (b *battlefield) willWeaponSkillReachSquare(acting *mob, skill data.WeaponSkill, tx, ty, tsize int) bool {
+//	patternCoords := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
+//	for _, c := range patternCoords {
+//		if geometry.RectContainsCoords(tx, ty, tsize, tsize, c[0], c[1]) {
+//			return true
+//		}
+//	}
+//	return false
+//}
 
 func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *data.WeaponSkill, tx, ty, tsize int) {
 	if acting.stamina < skill.StaminaCost {
@@ -21,6 +20,9 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *
 	}
 	tickToOccur := b.currentTick + skill.GetDurationForTurnTicks(TICKS_IN_COMBAT_TURN)
 	acting.nextTickToAct = tickToOccur
+	if skill.IsInstant {
+		tickToOccur = b.currentTick // it's for action occurence, as mob delay is already set.
+	}
 	acting.stamina -= skill.StaminaCost
 
 	patternCoords := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)

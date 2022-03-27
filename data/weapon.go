@@ -41,6 +41,7 @@ type weaponData struct {
 
 const (
 	WEAPON_BROKENSWORD = iota
+	WEAPON_DEBUGGER
 	WEAPON_RAPIER
 	WEAPON_SHORTSWORD
 	WEAPON_LONGSWORD
@@ -49,6 +50,32 @@ const (
 )
 
 var weaponsTable = map[int]*weaponData{
+	WEAPON_DEBUGGER: {
+		Name:     "Sword of Holy Debug",
+		toHitNum: 1, toHitVal: 6, toHitMod: 2,
+		dnum: 1, dval: 3, dmod: 0,
+		AttackPatterns: []*WeaponSkill{
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_RIGHT_STRIKE_SIDESTEP],
+				DurationInTurnLengths:     15,
+				WeaponDamageAmountPercent: 75,
+				StaminaCost:               2,
+			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_STRIKE_STEP_BACK],
+				DurationInTurnLengths:     15,
+				WeaponDamageAmountPercent: 75,
+				StaminaCost:               2,
+			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_JUMP_LUNGE],
+				DurationInTurnLengths:     10,
+				IsInstant:                 true,
+				WeaponDamageAmountPercent: 150,
+				StaminaCost:               5,
+			},
+		},
+	},
 	WEAPON_BROKENSWORD: {
 		Name:     "Broken Sword",
 		toHitNum: 1, toHitVal: 6, toHitMod: 2,
@@ -75,6 +102,12 @@ var weaponsTable = map[int]*weaponData{
 			},
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_STRIKE_STEP_BACK],
+				DurationInTurnLengths:     15,
+				WeaponDamageAmountPercent: 75,
+				StaminaCost:               2,
+			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_RIGHT_STRIKE_SIDESTEP],
 				DurationInTurnLengths:     15,
 				WeaponDamageAmountPercent: 75,
 				StaminaCost:               2,

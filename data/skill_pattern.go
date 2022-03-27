@@ -96,6 +96,7 @@ const (
 	APATTERN_STRIKE_STEP_BACK
 
 	APATTERN_RIGHT_SLASH
+	APATTERN_RIGHT_STRIKE_SIDESTEP
 	APATTERN_SLASH
 	APATTERN_BIG_SLASH
 
@@ -111,6 +112,17 @@ var AttackPatternsTable = map[int]*SkillPattern{
 		Name:                   "Strike",
 		AttackRelativeCoords: [][]int{
 			{1, 0},
+		},
+		ReachInUnitSizes: 1,
+	},
+	APATTERN_RIGHT_STRIKE_SIDESTEP: {
+		patternApplicationType: spTypeRelativeCoordinates,
+		Name:                   "Right Strike Walk",
+		AttackRelativeCoords: [][]int{
+			{1, 0},
+		},
+		MovementRelativeCoords: [][]int{
+			{1, -1},
 		},
 		ReachInUnitSizes: 1,
 	},

@@ -51,7 +51,7 @@ func (c *consoleIO) renderBattlefield(b *battlefield, potentialActionCoords [][]
 		}
 	}
 	for _, e := range b.actions {
-		if e.tickToOccur == b.currentTick {
+		if !e.hidden && e.tickToOccur == b.currentTick {
 			c.setStyle(tcell.ColorRed, tcell.ColorBlack)
 			c.putChar('*', e.x, e.y)
 		}
@@ -134,7 +134,7 @@ func (c *consoleIO) makeActionsMap(b *battlefield) {
 		actsmap[i] = make([]int, len(b.tiles[i]))
 	}
 	for _, a := range b.actions {
-		if b.containsCoords(a.x, a.y) {
+		if !a.hidden && b.containsCoords(a.x, a.y) {
 			number := 2
 			if a.tickToOccur - b.currentTick > TICKS_IN_COMBAT_TURN {
 				number = 2

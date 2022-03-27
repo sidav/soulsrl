@@ -39,7 +39,7 @@ func (b *battlefield) actAsMob(m *mob) {
 		}
 	} else {
 		// move by coords
-		moved := b.tryMoveMobByVector(m, m.ai.dirX, m.ai.dirY)
+		moved := b.tryMoveMobByVector(m, m.ai.dirX, m.ai.dirY, true)
 		if !moved {
 			if rnd.PercentChance(m.ai.changeDirInCombatPercent) {
 				m.ai.dirX, m.ai.dirY = 0, 0 // so it will be changed later

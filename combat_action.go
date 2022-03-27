@@ -7,8 +7,11 @@ const (
 
 type action struct {
 	x, y        int
+	vx, vy      int // vector for action (useful for movement)
 	tickToOccur int
 	actionType  int
+
+	hidden bool // do not render this
 
 	toHitRoll, damageRoll int
 
@@ -19,6 +22,10 @@ func (b *battlefield) applyActions() {
 	for i := 0; i < len(b.actions); i++ {
 		if b.currentTick >= b.actions[i].tickToOccur {
 			action := b.actions[i]
+			if action.actionType == ACTIONTYPE_MOVE {
+				b.tryMoveMobByVector(action.owner, action.vx, action.vy, false)
+				continue
+			}
 			mobAtCoords := b.getMobPresentAt(action.x, action.y)
 			if mobAtCoords != nil && mobAtCoords != action.owner &&
 				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {

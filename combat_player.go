@@ -64,6 +64,11 @@ func (b *battlefield) workPlayerInput() {
 		log.AppendMessage("Small mob dropped.")
 		b.addMobAtRandomEmptyPlace(p)
 	}
+	if key == "l" {
+		p := newMob("spearman")
+		log.AppendMessage("Small mob dropped.")
+		b.addMobAtRandomEmptyPlace(p)
+	}
 	if key == "ENTER" {
 		b.player.nextTickToAct = b.currentTick + 100
 	}
@@ -72,7 +77,7 @@ func (b *battlefield) workPlayerInput() {
 func (b *battlefield) movePlayerOrDefaultHit(key string) bool {
 	dirx, diry := readKeyToVector(key)
 	if !(dirx == 0 && diry == 0) {
-		moved := b.tryMoveMobByVector(b.player, dirx, diry)
+		moved := b.tryMoveMobByVector(b.player, dirx, diry, true)
 		if moved {
 			return true
 		}

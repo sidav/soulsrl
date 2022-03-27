@@ -25,14 +25,14 @@ func GetVectorRotatedLikeVector(vx, vy, rx, ry int) (int, int) {
 
 // doesn't work well when (x != 0 && y != 0 && coords are not diagonal)
 func StupidRotateVector45(x, y int) (int, int) {
-	initialLen := max(abs(x), abs(y))
+	initialLen := max(Abs(x), Abs(y))
 	t := x
 	x = x - y
 	y = t + y
 	return sign(x) * initialLen, sign(y) * initialLen
 }
 
-func abs(x int) int {
+func Abs(x int) int {
 	if x < 0 {
 		return -x
 	}
@@ -57,11 +57,11 @@ func sign(x int) int {
 }
 
 func OrthogonalDistance(x1, y1, x2, y2 int) int {
-	return max(abs(x1-x2), abs(y1-y2))
+	return max(Abs(x1-x2), Abs(y1-y2))
 }
 
 func sqDistance(x1, y1, x2, y2 int) int {
-	return abs(x1-x2)*abs(x1-x2) + abs(y1-y2)*abs(y1-y2)
+	return Abs(x1-x2)*Abs(x1-x2) + Abs(y1-y2)*Abs(y1-y2)
 }
 
 func ScaleCoords(x, y, scale int) [][]int {

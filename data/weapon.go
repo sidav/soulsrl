@@ -27,6 +27,7 @@ type WeaponSkill struct {
 	StaminaCost               int
 	IsInstant                 bool
 	HasJumpOver               bool
+	HasMoveTo                 bool
 }
 
 func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
@@ -140,6 +141,7 @@ var weaponsTable = map[int]*weaponData{
 				Pattern:                   AttackPatternsTable[APATTERN_JUMP_LUNGE],
 				DurationInTurnLengths:     10,
 				IsInstant:                 true,
+				HasMoveTo:                 true,
 				WeaponDamageAmountPercent: 150,
 				StaminaCost:               5,
 			},

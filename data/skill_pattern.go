@@ -18,15 +18,17 @@ type SkillPattern struct {
 	Name                   string
 	AttackRelativeCoords   [][]int
 	MovementRelativeCoords [][]int
+	MovementIsJumpOver     bool
 
 	// for helping ai calculations, used ONLY in them
 	ReachInUnitSizes int
 }
 
-type PatternMovementVector struct {
-	Vx, Vy int
-	JumpOver bool
-}
+//
+//type PatternMovementVector struct {
+//	Vx, Vy int
+//	JumpOver bool
+//}
 
 func getRelativeCoordsByVector(coordsFacingRight [][]int, vx, vy int) [][]int {
 	var coords [][]int
@@ -57,7 +59,7 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 	actorCenterX, actorCenterY := actorX+actorSize/2, actorY+actorSize/2
 	targetCenterX, targetCenterY := targetX+targetSize/2, targetY+targetSize/2
 	vx, vy := line.GetNextStepForLine(actorCenterX, actorCenterY, targetCenterX, targetCenterY)
-	var attackCoords[][]int
+	var attackCoords [][]int
 	switch sp.patternApplicationType {
 	case spTypeNearbyRect:
 		coverX, coverY := geometry.GetCoordsOfClosestCoordToRectFromRect(actorX, actorY, actorSize, actorSize,
@@ -83,6 +85,9 @@ func (sp *SkillPattern) GetListOfCoordsWhenAppliedAtRect(actorX, actorY, actorSi
 	if len(sp.MovementRelativeCoords) > 0 {
 		movCoords := getRelativeCoordsByVector(sp.MovementRelativeCoords, vx, vy)
 		moveLength := actorSize
+		if sp.MovementIsJumpOver {
+			moveLength = 1
+		}
 		for i := 0; i < moveLength; i++ {
 			moveVectors = append(moveVectors, movCoords[0])
 		}
@@ -94,9 +99,10 @@ const (
 	APATTERN_SIMPLE_STRIKE = iota
 
 	APATTERN_STRIKE_STEP_BACK
+	APATTERN_STRIKE_JUMP_OVER
+	APATTERN_RIGHT_STRIKE_SIDESTEP
 
 	APATTERN_RIGHT_SLASH
-	APATTERN_RIGHT_STRIKE_SIDESTEP
 	APATTERN_SLASH
 	APATTERN_BIG_SLASH
 
@@ -135,6 +141,18 @@ var AttackPatternsTable = map[int]*SkillPattern{
 		MovementRelativeCoords: [][]int{
 			{-1, 0},
 		},
+		ReachInUnitSizes: 1,
+	},
+	APATTERN_STRIKE_JUMP_OVER: {
+		patternApplicationType: spTypeNearbyRect,
+		Name:                   "Strike and jump over",
+		AttackRelativeCoords: [][]int{
+			{1, 0},
+		},
+		MovementRelativeCoords: [][]int{
+			{1, 0},
+		},
+		MovementIsJumpOver: true,
 		ReachInUnitSizes: 1,
 	},
 	APATTERN_RIGHT_SLASH: {

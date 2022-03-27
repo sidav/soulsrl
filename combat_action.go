@@ -3,6 +3,7 @@ package main
 const (
 	ACTIONTYPE_ATTACK = iota
 	ACTIONTYPE_MOVE
+	ACTIONTYPE_JUMPOVER
 )
 
 type action struct {
@@ -11,7 +12,7 @@ type action struct {
 	tickToOccur int
 	actionType  int
 
-	hidden bool // do not render this
+	hidden     bool // do not render this
 
 	toHitRoll, damageRoll int
 
@@ -24,6 +25,29 @@ func (b *battlefield) applyActions() {
 			action := b.actions[i]
 			if action.actionType == ACTIONTYPE_MOVE {
 				b.tryMoveMobByVector(action.owner, action.vx, action.vy, false)
+				continue
+			}
+			if action.actionType == ACTIONTYPE_JUMPOVER {
+				actor := action.owner
+				newCoordX, newCoordY := actor.x+action.vx, actor.y + action.vy
+				// let's see what stands by vector.
+				mobWhoActorJumpsOver := b.getMobInSquareOtherThan(newCoordX, newCoordY, actor.size, actor)
+				if mobWhoActorJumpsOver != nil {
+					currentMobInPath := mobWhoActorJumpsOver
+					for currentMobInPath == mobWhoActorJumpsOver {
+						newCoordX += action.vx
+						newCoordY += action.vy
+						currentMobInPath = b.getMobInSquareOtherThan(newCoordX, newCoordY, actor.size, actor)
+					}
+					if currentMobInPath == nil && b.containsCoords(newCoordX, newCoordY) && b.areAllTilesInRectPassable(newCoordX, newCoordY, actor.size) {
+						actor.x = newCoordX
+						actor.y = newCoordY
+					}
+				} else { // if there is no mob, just jump over 1 cell
+					for i := 0; i < actor.size+1; i++ {
+						b.tryMoveMobByVector(actor, action.vx, action.vy, false)
+					}
+				}
 				continue
 			}
 			mobAtCoords := b.getMobPresentAt(action.x, action.y)

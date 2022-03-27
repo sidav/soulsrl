@@ -43,11 +43,15 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *
 		})
 	}
 	for _, vect := range moveVectors {
+		actionType := ACTIONTYPE_MOVE
+		if skill.Pattern.MovementIsJumpOver {
+			actionType = ACTIONTYPE_JUMPOVER
+		}
 		b.actions = append(b.actions, &action{
 			vx:          vect[0],
 			vy:          vect[1],
 			tickToOccur: tickToOccur,
-			actionType:  ACTIONTYPE_MOVE,
+			actionType:  actionType,
 			hidden:      true,
 			owner:       acting,
 		})

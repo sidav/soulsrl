@@ -74,6 +74,13 @@ var weaponsTable = map[int]*weaponData{
 				WeaponDamageAmountPercent: 150,
 				StaminaCost:               5,
 			},
+			{
+				Pattern:                   AttackPatternsTable[APATTERN_STRIKE_JUMP_OVER],
+				DurationInTurnLengths:     10,
+				IsInstant:                 true,
+				WeaponDamageAmountPercent: 150,
+				StaminaCost:               5,
+			},
 		},
 	},
 	WEAPON_BROKENSWORD: {

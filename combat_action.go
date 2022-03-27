@@ -12,9 +12,9 @@ type action struct {
 	tickToOccur int
 	actionType  int
 
-	hidden     bool // do not render this
+	hidden bool // do not render this
 
-	toHitRoll, damageRoll int
+	damageAmountPercent, rolledDamage int
 
 	owner *mob
 }
@@ -29,7 +29,7 @@ func (b *battlefield) applyActions() {
 			}
 			if action.actionType == ACTIONTYPE_JUMPOVER {
 				actor := action.owner
-				newCoordX, newCoordY := actor.x+action.vx, actor.y + action.vy
+				newCoordX, newCoordY := actor.x+action.vx, actor.y+action.vy
 				// let's see what stands by vector.
 				mobWhoActorJumpsOver := b.getMobInSquareOtherThan(newCoordX, newCoordY, actor.size, actor)
 				if mobWhoActorJumpsOver != nil {
@@ -55,7 +55,9 @@ func (b *battlefield) applyActions() {
 				mobAtCoords.wasAlreadyAffectedByActionBy != action.owner {
 
 				mobAtCoords.wasAlreadyAffectedByActionBy = action.owner
-				b.harmMob(action.owner, action.toHitRoll, action.damageRoll, mobAtCoords)
+				b.harmMob(action.owner, action.rolledDamage, action.damageAmountPercent, mobAtCoords)
+			} else if mobAtCoords == nil {
+				log.AppendMessagef("%s misses!", action.owner.name)
 			}
 		}
 	}
@@ -73,21 +75,16 @@ func (b *battlefield) cleanupActions() {
 	}
 }
 
-func (b *battlefield) harmMob(attacker *mob, toHit, dmg int, target *mob) {
-	targetArmorClass := 0
-	targetDamageReduction := 0
+func (b *battlefield) harmMob(attacker *mob, rolledHits, damageAmountPercent int, target *mob) {
+	rolledBlock := 0
 	if target.body != nil {
-		targetArmorClass = target.body.AsArmor.GetData().ArmorClass
-		targetDamageReduction = target.body.AsArmor.GetData().DamageReduction
+		rolledBlock = target.body.AsArmor.RollBlock(rnd)
 	}
-	if toHit > targetArmorClass {
-		dmg -= targetDamageReduction
-		if dmg < 1 {
-			dmg = 1
-		}
-		target.hitpoints -= dmg
-		log.AppendMessagef("%s hits %s (%d dmg)!", attacker.name, target.name, dmg)
-	} else {
-		log.AppendMessagef("%s misses %s!", attacker.name, target.name)
+	dmg := (rolledHits * damageAmountPercent / 100) - rolledBlock
+	if dmg < 0 {
+		dmg = 0
 	}
+	target.hitpoints -= dmg
+	log.AppendMessagef("%s hits %s! (%d dmg)", attacker.name, target.name, dmg)
+	log.AppendMessagef("Attack: %d * %d%% = %d, block: %d", rolledHits, damageAmountPercent, rolledHits * damageAmountPercent / 100, rolledBlock)
 }

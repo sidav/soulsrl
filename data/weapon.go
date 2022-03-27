@@ -10,14 +10,16 @@ func (w *Weapon) GetData() *weaponData {
 	return weaponsTable[w.Code]
 }
 
-func (w *Weapon) RollToHitDice(rnd *fibrandom.FibRandom) int {
+func (w *Weapon) RollDamage(rnd *fibrandom.FibRandom) int {
 	data := w.GetData()
-	return rnd.RollDice(data.toHitNum, data.toHitVal, data.toHitMod)
-}
-
-func (w *Weapon) RollDamageDice(rnd *fibrandom.FibRandom) int {
-	data := w.GetData()
-	return rnd.RollDice(data.dnum, data.dval, data.dmod)
+	totalHits := 0
+	for i := 0; i < data.attackRating; i++ {
+		rand := rnd.RandInRange(1, 100)
+		if rand < data.baseToHitPercent {
+			totalHits++
+		}
+	}
+	return totalHits
 }
 
 type WeaponSkill struct {
@@ -33,10 +35,10 @@ func (ws *WeaponSkill) GetDurationForTurnTicks(ticksPerTurn int) int {
 }
 
 type weaponData struct {
-	Name                         string
-	dnum, dval, dmod             int
-	toHitNum, toHitVal, toHitMod int
-	AttackPatterns               []*WeaponSkill
+	Name             string
+	attackRating     int
+	baseToHitPercent int
+	AttackPatterns   []*WeaponSkill
 }
 
 const (
@@ -52,8 +54,8 @@ const (
 var weaponsTable = map[int]*weaponData{
 	WEAPON_DEBUGGER: {
 		Name:     "Sword of Holy Debug",
-		toHitNum: 1, toHitVal: 6, toHitMod: 2,
-		dnum: 1, dval: 3, dmod: 0,
+		attackRating: 8,
+		baseToHitPercent: 30,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_RIGHT_STRIKE_SIDESTEP],
@@ -85,8 +87,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_BROKENSWORD: {
 		Name:     "Broken Sword",
-		toHitNum: 1, toHitVal: 6, toHitMod: 2,
-		dnum: 1, dval: 3, dmod: 0,
+		attackRating: 5,
+		baseToHitPercent: 30,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -98,8 +100,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_RAPIER: {
 		Name:     "Rapier",
-		toHitNum: 2, toHitVal: 6, toHitMod: 0,
-		dnum: 2, dval: 6, dmod: 0,
+		attackRating: 4,
+		baseToHitPercent: 70,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -123,8 +125,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_SHORTSWORD: {
 		Name:     "Short Sword",
-		toHitNum: 2, toHitVal: 6, toHitMod: 0,
-		dnum: 2, dval: 6, dmod: 0,
+		attackRating: 5,
+		baseToHitPercent: 40,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -142,8 +144,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_LONGSWORD: {
 		Name:     "Long Sword",
-		toHitNum: 2, toHitVal: 6, toHitMod: 0,
-		dnum: 2, dval: 6, dmod: 2,
+		attackRating: 7,
+		baseToHitPercent: 30,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -161,8 +163,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_GIANTS_LONGSWORD: {
 		Name:     "Giant Long Sword",
-		toHitNum: 2, toHitVal: 6, toHitMod: 0,
-		dnum: 2, dval: 6, dmod: 2,
+		attackRating: 15,
+		baseToHitPercent: 30,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],
@@ -180,8 +182,8 @@ var weaponsTable = map[int]*weaponData{
 	},
 	WEAPON_SPEAR: {
 		Name:     "Spear",
-		toHitNum: 2, toHitVal: 6, toHitMod: 0,
-		dnum: 1, dval: 6, dmod: 3,
+		attackRating: 5,
+		baseToHitPercent: 40,
 		AttackPatterns: []*WeaponSkill{
 			{
 				Pattern:                   AttackPatternsTable[APATTERN_SIMPLE_STRIKE],

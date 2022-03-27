@@ -26,20 +26,17 @@ func (b *battlefield) applyWeaponSkill(acting *mob, weapon *data.Weapon, skill *
 	acting.stamina -= skill.StaminaCost
 
 	patternCoords, moveVectors := skill.Pattern.GetListOfCoordsWhenAppliedAtRect(acting.x, acting.y, acting.size, tx, ty, tsize)
-	toHitRoll := weapon.RollToHitDice(rnd)
-	damageRoll := weapon.RollDamageDice(rnd)
-	damageRoll = skill.WeaponDamageAmountPercent * damageRoll / 100
 	for _, coord := range patternCoords {
 		if !b.containsCoords(coord[0], coord[1]) {
 			continue
 		}
 		b.actions = append(b.actions, &action{
-			tickToOccur: tickToOccur,
-			owner:       acting,
-			damageRoll:  damageRoll,
-			toHitRoll:   toHitRoll,
-			x:           coord[0],
-			y:           coord[1],
+			tickToOccur:         tickToOccur,
+			owner:               acting,
+			rolledDamage:        weapon.RollDamage(rnd),
+			damageAmountPercent: skill.WeaponDamageAmountPercent,
+			x:                   coord[0],
+			y:                   coord[1],
 		})
 	}
 	for _, vect := range moveVectors {

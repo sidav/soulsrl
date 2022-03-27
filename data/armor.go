@@ -1,5 +1,7 @@
 package data
 
+import "github.com/sidav/sidavgorandom/fibrandom"
+
 type Armor struct {
 	Code int
 }
@@ -9,9 +11,21 @@ func (a *Armor) GetData() *armorData {
 }
 
 type armorData struct {
-	Name            string
-	ArmorClass      int
-	DamageReduction int
+	Name               string
+	ArmorClass         int
+	BaseToBlockPercent int
+}
+
+func (a *Armor) RollBlock(rnd *fibrandom.FibRandom) int {
+	data := a.GetData()
+	totalBlock := 0
+	for i := 0; i < data.ArmorClass; i++ {
+		rand := rnd.RandInRange(1, 100)
+		if rand < data.BaseToBlockPercent {
+			totalBlock++
+		}
+	}
+	return totalBlock
 }
 
 const (
@@ -23,23 +37,23 @@ const (
 
 var armorsTable = map[int]*armorData{
 	ARMOR_BASIC: {
-		Name:            "Clothes",
-		ArmorClass:      1,
-		DamageReduction: 1,
+		Name:               "Clothes",
+		ArmorClass:         1,
+		BaseToBlockPercent: 70,
 	},
 	ARMOR_LEATHER: {
-		Name:            "Leather armor",
-		ArmorClass:      3,
-		DamageReduction: 3,
+		Name:               "Leather armor",
+		ArmorClass:         3,
+		BaseToBlockPercent: 30,
 	},
 	ARMOR_PLATE: {
-		Name:            "Plate mail",
-		ArmorClass:      4,
-		DamageReduction: 11,
+		Name:               "Plate mail",
+		ArmorClass:         4,
+		BaseToBlockPercent: 30,
 	},
 	ARMOR_HIGH_AC: {
-		Name:            "Duelist armor",
-		ArmorClass:      8,
-		DamageReduction: 2,
+		Name:               "Duelist armor",
+		ArmorClass:         3,
+		BaseToBlockPercent: 50,
 	},
 }
